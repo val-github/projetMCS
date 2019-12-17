@@ -33,9 +33,9 @@
         }
 #define PORT_SVC 6000
 #define INADDR_SVC "127.0.0.1"
-#define MSG "100 : [Gwen] Moi je fais des bulles et toi ?"
-#define BYE "000 : [Gwen] Au revoir et à bientôt ..."
-#define ERR "200 : [Gwen] Requête ou réponse non reconnue !"
+#define MSG "100 : demande partie prise en compte"
+#define BYE "000 : fin de partie"
+#define ERR "200 : Requête ou réponse non reconnue !"
 #define OK "OK"
 #define NOK "Not OK"
 #define MAX_BUFF 1024
