@@ -1,4 +1,3 @@
-/* ------------------------------------------------------------------------ */
 /**
  *  \file       poker.h
  * 
@@ -11,10 +10,17 @@
  *
  *  \version    1.0
 */
-/* ------------------------------------------------------------------------ */
 #include "poker.h"
 
-int main() { 
+/* ------------------------------------------------------------------------ */
+/**
+ *  \fn         main()
+ *
+ *  \brief      Fonction main du fichier
+ */
+/* ------------------------------------------------------------------------ */
+int main()
+{ 
     int sock,cltlen; 
     struct sockaddr_in svc; 
     struct sockaddr_in clt;
@@ -33,7 +39,8 @@ int main() {
     CHECK(bind(sock, (struct sockaddr *) &svc, sizeof svc) , "Can't bind");
 
     // Boucle permanente de service 
-    while (1) { 
+    while (1) 
+    { 
         cltlen = sizeof(clt);
         //  Réception de la demande de partie 
         CHECK(recvfrom(sock, buffer, sizeof(buffer), 0,  (struct sockaddr *)&clt, &cltlen) , "Can't receive"); 
