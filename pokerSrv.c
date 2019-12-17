@@ -31,7 +31,12 @@ int main()
     // Boucle permanente de service 
     while (1) 
     { 
-
+        // Attente d’un appel
+        cltLen = sizeof(clt);
+        CHECK(sd=accept(se, (struct sockaddr *)&clt, &cltLen) , "Can't connect");
+        // Dialogue avec le client
+        dialogueClt (sd , clt);
+        close(sd);
     }
     close(se);
     return 0;

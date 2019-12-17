@@ -70,3 +70,28 @@ void dialogueClt(int sd, struct sockaddr_in clt)
         }
     } while (atoi(requete) != 0);
 }
+
+
+void dialogueClt (int sd, struct sockaddr_in clt) 
+{
+    char message[MAX_BUFF];
+    while(1)
+    {
+        read(sd, buffer,sizeof(buffer));//reponse du write du serveur
+        printf(" recu => %s\n", buffer);
+        
+        scanf("%[^'\n']",message);
+        getchar();
+        write(sd, message,strlen(message)+1);//envoie au read du client
+        
+    }
+}
+
+void dialogueSrv (int sd, struct sockaddr_in srv, char *message)
+{
+    char reponse[MAX_BUFF];
+    // Envoi du message au serveur
+    CHECK(write(sd, message, sizeof(message)+1), "Can't send");//envoie au read du serveur
+    CHECK(read(sd, reponse, sizeof(reponse)), "Can't send");//reponse du write du client
+    printf(" recu => %s\n",reponse);
+}
