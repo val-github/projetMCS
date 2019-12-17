@@ -16,7 +16,7 @@
 
 /* ------------------------------------------------------------------------ */
 /**
- *  \fn         init(TAVL )
+ *  \fn         main(int ,char)
  *
  *  \brief      Initialisation de la Maille
  *
