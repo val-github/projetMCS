@@ -18,11 +18,6 @@
 /**
  *  \fn         main(int ,char)
  *
- *  \brief      Initialisation de la Maille
- *
- *  \author     Gwendoline Quettier
- *
- *  \date       16 Octobre 2017
- *
+ *  \brief      Fonction main du fichier
  */
 /* ------------------------------------------------------------------------ */
