@@ -19,9 +19,10 @@
  *  \brief      Fonction main du fichier
  */
 /* ------------------------------------------------------------------------ */
+#define CHECK(sts,msg) if ((sts) == -1) {perror(msg);exit(-1);}
 int main()
 { 
-    int sock,cltlen; 
+    int sock,cltlen,c;
     struct sockaddr_in svc; 
     struct sockaddr_in clt;
 
@@ -41,11 +42,21 @@ int main()
     // Boucle permanente de service 
     while (1) 
     { 
+        int sock
+        CHECK(sock = socket(PF_INET, SOCK_STREAM, 0), "Can't create");
         cltlen = sizeof(clt);
         //  Réception de la demande de partie 
-        CHECK(recvfrom(sock, buffer, sizeof(buffer), 0,  (struct sockaddr *)&clt, &cltlen) , "Can't receive"); 
+        CHECK(recvfrom(sock, buffer, sizeof(buffer), 0,  (struct sockaddr *)&clt, &cltlen) , "Can't receive");
+        i++;
         //  Affichage du message reçu 
-        printf("Message reçu [%s] de [%s]\n",  buffer, inet_ntoa(clt.sin_addr));
+        if (i==5) {
+            write(sock, NOK, strlen(NOK) + 1);
+            printf("début de partie");
+        }
+        else {
+            write(sock, NOK, strlen(NOK) + 1);
+            printf("en attente de joueurs");
+        }
     }
     close(sock);
     return 0;

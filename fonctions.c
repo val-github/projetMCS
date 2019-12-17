@@ -12,6 +12,13 @@
 */
 
 #include "poker.h"
+/* ------------------------------------------------------------------------ */
+/**
+ *  \fn         void dialogueClt(int, struct sockaddr_in)
+ *
+ *  \brief      prend en charge les commenications entre les différents clients et le serveur
+ */
+/* ------------------------------------------------------------------------ */
 
 void dialogueClt(int sd, struct sockaddr_in clt)
 {
@@ -23,7 +30,7 @@ void dialogueClt(int sd, struct sockaddr_in clt)
         switch (atoi(requete))
         {
         case 0:
-            printf("Au revoir client 1 sur service 6000\n");
+            printf("fin du dialogue");
             break;
         case 100:
             write(sd, OK, strlen(OK) + 1);
