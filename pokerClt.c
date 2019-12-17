@@ -14,12 +14,20 @@
 
 /* ------------------------------------------------------------------------ */
 /**
- *  \fn         main(int ,char)
+ *  \fn         int main(int ,char)
  *
  *  \brief      Fonction main du fichier
  */
 /* ------------------------------------------------------------------------ */
-int main()
+int main(int argc, char **argv)
 {
-    printf("coucocu je met de la merde !!!");
+    int sock;
+	struct sockaddr_in svc;
+
+    if (argc <= 2) 
+	{
+		printf("ERREUR: Aucun argument passé en ligne de commande !\n");
+		printf("USAGE: %s <@IP> <PORT>\n", argv[0]);
+		return 1;
+	}
 }
