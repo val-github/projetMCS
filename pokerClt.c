@@ -23,6 +23,7 @@ int main(int argc, char **argv)
 {
     int sock;
 	struct sockaddr_in svc;
+	char message[MAX_BUFF];
 
     if (argc <= 2) 
 	{
@@ -30,4 +31,15 @@ int main(int argc, char **argv)
 		printf("USAGE: %s <@IP> <PORT>\n", argv[0]);
 		return 1;
 	}
+
+	sock=createSocketListen(svc,atoi(argv[2]),inet_addr(argv[1]));
+
+    while(1)
+    {
+        scanf("%[^'\n']",message);
+        getchar();
+        dialogueSrv (sock, svc, message);
+    }
+    close(sock);
+    return 0;
 }
