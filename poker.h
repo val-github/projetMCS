@@ -42,5 +42,6 @@
 char buffer[MAX_BUFF];
 
 /* ******************* PROTOTYPES ******************** */
-
-
+int createSocketListen(struct sockaddr_in svc,int port, int adresse);
+void dialogueClt (int sd, struct sockaddr_in clt);
+void dialogueSrv (int sd, struct sockaddr_in srv, char *message);
