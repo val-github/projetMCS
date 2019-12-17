@@ -21,3 +21,7 @@
  *  \brief      Fonction main du fichier
  */
 /* ------------------------------------------------------------------------ */
+int main()
+{
+    printf("coucocu je met de la merde !!!");
+}
