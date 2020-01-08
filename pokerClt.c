@@ -33,7 +33,7 @@ int main(int argc, char **argv)
 		return 1;
 	}
 
-	sock=createSocketListen(svc,atoi(argv[2]),inet_addr(argv[1]));
+	sock=createSocketListenClt(svc,atoi(argv[2]),inet_addr(argv[1]));
 
     while(1)
     {

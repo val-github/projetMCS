@@ -15,12 +15,12 @@
 
 /* ------------------------------------------------------------------------ */
 /**
- *  \fn         int createSocketListen(struct sockaddr_in,int, char *)
+ *  \fn         int createSocketListenClt(struct sockaddr_in, int, int)
  *
- *  \brief      La fonction crée l'ouverture de lecoute de la socket
+ *  \brief      La fonction crée l'ouverture de l'écoute de la socket du client
  */
 /* ------------------------------------------------------------------------ */
-int createSocketListen(struct sockaddr_in svc,int port, int adresse)
+int createSocketListenClt(struct sockaddr_in svc,int port, int adresse)
 {
     int sock=0;
 
@@ -38,6 +38,14 @@ int createSocketListen(struct sockaddr_in svc,int port, int adresse)
     
     return sock;
 }
+
+/* ------------------------------------------------------------------------ */
+/**
+ *  \fn         int createSocketListenSvc(struct sockaddr_in, int, int)
+ *
+ *  \brief      La fonction crée l'ouverture de l'écoute de la socket du serveur
+ */
+/* ------------------------------------------------------------------------ */
 int createSocketListenSvc(struct sockaddr_in svc,int port, int adresse)
 {
     int se=0;
