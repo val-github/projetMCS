@@ -6,7 +6,8 @@
 /* MAIN */
 int main()
 {
-    printf("Bonjour dans cette partie de poker\n");
+    printf("Bienvenus dans cette partie de poker\n");
+    
     return 0;
 }
 
