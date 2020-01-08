@@ -26,10 +26,10 @@ int main()
     struct sockaddr_in svc1,svc2,svc3,svc4, clt;
     socklen_t cltLen;
 
-    se1=createSocketListenSvc(svc1,PORT_SVC,INADDR_ANY);
-    se2=createSocketListenSvc(svc2,PORT_SVC,INADDR_ANY);
-    se3=createSocketListenSvc(svc3,PORT_SVC,INADDR_ANY);
-    se4=createSocketListenSvc(svc4,PORT_SVC,INADDR_ANY);
+    se1=createSocketListenSvc(svc1,6000,INADDR_ANY);
+    se2=createSocketListenSvc(svc2,6001,INADDR_ANY);
+    se3=createSocketListenSvc(svc3,6002,INADDR_ANY);
+    se4=createSocketListenSvc(svc4,6003,INADDR_ANY);
 
     // Boucle permanente de service 
 
@@ -89,6 +89,11 @@ int main()
             close(sd4);
         }
     }
+
+    waitpid(pid1,NULL,0);
+    waitpid(pid2,NULL,0);
+    waitpid(pid3,NULL,0);
+    waitpid(pid4,NULL,0);
     close(se1);
     close(se2);
     close(se3);
