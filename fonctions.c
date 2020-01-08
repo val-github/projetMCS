@@ -73,7 +73,9 @@ int createSocketListenSvc(struct sockaddr_in svc,int port, int adresse)
  *  \fn         void dialogueClt(int, struct sockaddr_in)
  *
  *  \brief      La fonction prend en charge les communications entre les 
- *              différents clients et le serveur
+ *              différents clients et le serveur; doit donner au premier client
+ *              l'instrcuction d'utiliser la fonction gerant et doit donner aux
+ *              autres clients l'adresse du premier client
  */
 /* ------------------------------------------------------------------------ */
 void dialogueClt (int sd, struct sockaddr_in clt) 
@@ -106,4 +108,16 @@ void dialogueSrv (int sd, struct sockaddr_in srv, char *message)
     CHECK(write(sd, message, sizeof(message)+1), "Can't send");//envoie au read du serveur
     CHECK(read(sd, reponse, sizeof(reponse)), "Can't send");//reponse du write du client
     printf(" recu => %s\n",reponse);
+}
+/* ------------------------------------------------------------------------ */
+/**
+ *  \fn         void gerant (int clt1,int clt2,int clt3,int clt4)
+ * 
+ *  \brief      La fonction contient les instruction permettant
+ *              à un des joueurs de gérer une partie 
+ */
+/* ------------------------------------------------------------------------ */
+void gerant (int clt1,int clt2,int clt3,int clt4)
+{
+
 }
