@@ -38,11 +38,35 @@
 #define NOK "Not OK"
 #define MAX_BUFF 1024
 
+/* ******************** TYPEDEF ******************** */
+/*typedef struct morceauPile
+{
+    int valeur[2];
+    struct morceauPile *next;
+}morceauPile, *Pile;*/
+
 /* ******************** VARIABLES GLOBALES ******************** */
 char buffer[MAX_BUFF];
+//Pile pile;
 
 /* ******************* PROTOTYPES ******************** */
 int createSocketListenClt(struct sockaddr_in ,int , int);
 int createSocketListenSvc(struct sockaddr_in ,int , int);
 void dialogueClt (int , struct sockaddr_in);
 void dialogueSrv (int , struct sockaddr_in , char *);
+
+/* ******************* PROTOTYPES ******************** */
+/*Pile pileVide();
+int pile_is_empty(Pile p);
+Pile empiler(Pile p, int chiffre, int couleur);
+Pile depiler(Pile p);
+void sommet(Pile p, int sommet[2], int affichage);
+int taille(Pile p);
+Pile viderPile(Pile p);
+void afficher(Pile p);*/
+
+/* ******************* PROTOTYPES ******************** */
+int random_7_14();
+int random_0_3();
+void creationPaquetMelange();
+int verifierCarte(int paquetMelange[32][2], int, int , int );
