@@ -38,6 +38,27 @@ int createSocketListen(struct sockaddr_in svc,int port, int adresse)
     
     return sock;
 }
+int createSocketListenSvc(struct sockaddr_in svc,int port, int adresse)
+{
+    int se=0;
+
+    // Création de la socket de réception d’écoute des appels
+    CHECK(se=socket(PF_INET, SOCK_STREAM, 0), "Can't create");
+
+    // Préparation de l’adressage du service (d’appel)
+    svc.sin_family = PF_INET;
+    svc.sin_port = htons (port);
+    svc.sin_addr.s_addr = adresse;
+    memset(&svc.sin_zero, 0, 8);
+
+    // Association de l’adressage préparé avec la socket d’écoute
+    CHECK(bind(se, (struct sockaddr *) &svc, sizeof svc) , "Can't bind");
+    
+    // Mise en écoute de la socket
+    CHECK(listen(se, 5) , "Can't calibrate");
+
+    return se;
+}
 
 /* ------------------------------------------------------------------------ */
 /**

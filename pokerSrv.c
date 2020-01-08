@@ -11,6 +11,7 @@
  *  \version    1.0
 */
 #include "poker.h"
+#include "fonctions.c"
 
 /* ------------------------------------------------------------------------ */
 /**
@@ -19,7 +20,6 @@
  *  \brief      Fonction main du fichier
  */
 /* ------------------------------------------------------------------------ */
-#define CHECK(sts,msg) if ((sts) == -1) {perror(msg);exit(-1);}
 int main()
 { 
     int se, sd;
