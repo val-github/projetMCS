@@ -22,6 +22,39 @@
 /* ------------------------------------------------------------------------ */
 int main()
 { 
+    /*printf("nombre de joueurs?:");
+    int nj = getchar();
+
+    for (int i=0; i<nj; i++)
+    {
+        int se,sd,port;
+        struct sockaddr_in svc,clt;
+        socklen_t cltLen;
+        port=6000+i;
+        se=createSocketListenSvc(svc,port,INADDR_ANY);
+
+        // Boucle permanente de service 
+
+        pid_t pid;
+        pid = fork();
+        if (pid == 0)
+        {
+            while (1) 
+            { 
+                // Attente d’un appel
+                cltLen = sizeof(clt);
+                CHECK(sd=accept(se, (struct sockaddr *)&clt, &cltLen) , "Can't connect");
+                // Dialogue avec le client
+                dialogueClt (sd , clt);
+                close(sd);
+                
+            }
+        }
+        waitpid(pid,NULL,0);
+        close(se);
+    }*/
+
+
     int se1,se2,se3,se4,sd1,sd2,sd3,sd4;
     struct sockaddr_in svc1,svc2,svc3,svc4, clt;
     socklen_t cltLen;
@@ -89,7 +122,7 @@ int main()
             close(sd4);
         }
     }
-
+    
     waitpid(pid1,NULL,0);
     waitpid(pid2,NULL,0);
     waitpid(pid3,NULL,0);
