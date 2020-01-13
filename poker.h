@@ -22,6 +22,7 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
+#include <time.h>
 
 /* ************************* DEFINE ************************* */
 #define CHECK(sts,msg)              \
@@ -40,9 +41,20 @@
 
 /* ******************** VARIABLES GLOBALES ******************** */
 char buffer[MAX_BUFF];
+//int nbJoueurs=3;
+int paquetMelange[32][2];
+int distribution[32][3];
 
 /* ******************* PROTOTYPES ******************** */
 int createSocketListenClt(struct sockaddr_in ,int , int);
 int createSocketListenSvc(struct sockaddr_in ,int , int);
 void dialogueClt (int , struct sockaddr_in);
 void dialogueSrv (int , struct sockaddr_in , char *);
+
+/* ******************* PROTOTYPES ******************** */
+int random_7_14();
+int random_0_3();
+void creationPaquetMelange();
+int verifierCarte(int tab[32][2], int, int , int );
+void creationListeCartes();
+void distribuer2Cartes();

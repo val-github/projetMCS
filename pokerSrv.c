@@ -62,7 +62,6 @@ int main()
     se1=createSocketListenSvc(svc1,6000,INADDR_ANY);
     se2=createSocketListenSvc(svc2,6001,INADDR_ANY);
     se3=createSocketListenSvc(svc3,6002,INADDR_ANY);
-    se4=createSocketListenSvc(svc4,6003,INADDR_ANY);
 
     // Boucle permanente de service 
 
@@ -75,8 +74,12 @@ int main()
             // Attente d’un appel
             cltLen = sizeof(clt);
             CHECK(sd1=accept(se1, (struct sockaddr *)&clt, &cltLen) , "Can't connect");
-            // Dialogue avec le client
-            dialogueClt (sd1 , clt);
+            // attribution du role d'hébergeur de la partie
+            char reponse[MAX_BUFF];
+            // Envoi du message à l'hébergeur
+            char rq;
+            rq="joueur 1; rôle d'hébergeur transmis";
+            CHECK(write(sd1, &rq, sizeof(rq)+1), "Can't send");
             close(sd1);
         }
     }
@@ -89,7 +92,7 @@ int main()
             // Attente d’un appel
             cltLen = sizeof(clt);
             CHECK(sd2=accept(se2, (struct sockaddr *)&clt, &cltLen) , "Can't connect");
-            // Dialogue avec le client
+            // envois du message au client pour qu'il se connecte a l'hébergeur
             dialogueClt (sd2 , clt);
             close(sd2);
         }
@@ -103,33 +106,18 @@ int main()
             // Attente d’un appel
             cltLen = sizeof(clt);
             CHECK(sd3=accept(se3, (struct sockaddr *)&clt, &cltLen) , "Can't connect");
-            // Dialogue avec le client
+            // envois du message au client pour qu'il se connecte a l'hébergeur
             dialogueClt (sd3 , clt);
             close(sd3);
         }
     }
 
-    pid4 = fork();
-    if (pid4 == 0)
-    {
-        while (1) 
-        { 
-            // Attente d’un appel
-            cltLen = sizeof(clt);
-            CHECK(sd4=accept(se4, (struct sockaddr *)&clt, &cltLen) , "Can't connect");
-            // Dialogue avec le client
-            dialogueClt (sd4 , clt);
-            close(sd4);
-        }
-    }
     
     waitpid(pid1,NULL,0);
     waitpid(pid2,NULL,0);
     waitpid(pid3,NULL,0);
-    waitpid(pid4,NULL,0);
     close(se1);
     close(se2);
     close(se3);
-    close(se4);
     return 0;
 }
