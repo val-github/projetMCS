@@ -93,7 +93,9 @@ int main()
             cltLen = sizeof(clt);
             CHECK(sd2=accept(se2, (struct sockaddr *)&clt, &cltLen) , "Can't connect");
             // envois du message au client pour qu'il se connecte a l'hébergeur
-            dialogueClt (sd2 , clt);
+            char rq;
+            rq="joueur 2";
+            CHECK(write(sd2, &rq, sizeof(rq)+1), "Can't send");
             close(sd2);
         }
     }
@@ -107,7 +109,9 @@ int main()
             cltLen = sizeof(clt);
             CHECK(sd3=accept(se3, (struct sockaddr *)&clt, &cltLen) , "Can't connect");
             // envois du message au client pour qu'il se connecte a l'hébergeur
-            dialogueClt (sd3 , clt);
+            char rq;
+            rq="joueur 3";
+            CHECK(write(sd3, &rq, sizeof(rq)+1), "Can't send");
             close(sd3);
         }
     }

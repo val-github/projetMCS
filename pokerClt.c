@@ -20,20 +20,14 @@
  *  \brief      Fonction main du fichier
  */
 /* ------------------------------------------------------------------------ */
-int main(int argc, char **argv)
+int main(char **argv)
 {
     int sock;
 	struct sockaddr_in svc;
 	char message[MAX_BUFF];
 
-    if (argc <= 2) 
-	{
-		printf("ERREUR: Aucun argument passé en ligne de commande !\n");
-		printf("USAGE: %s <@IP> <PORT>\n", argv[0]);
-		return 1;
-	}
 
-	sock=createSocketListenClt(svc,atoi(argv[2]),inet_addr(argv[1]));
+	sock=createSocketListenClt(svc,atoi(argv[2]),inet_addr(127.0.0.1));
 
     while(1)
     {

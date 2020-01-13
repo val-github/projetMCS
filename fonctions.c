@@ -116,13 +116,31 @@ void dialogueSrv (int sd, struct sockaddr_in srv, char *message)
     {
         gerant()
     }
-    if (reponse="joueur")
+    if (reponse="joueur 1")
     {
         int sock;
 	    struct sockaddr_in svc;
 	    char message[MAX_BUFF];
 
-        sock=createSocketListenClt(svc,atoi(6010),inet_addr(127.0.0.1));
+        sock=createSocketListenClt(svc,atoi(6011),inet_addr(127.0.0.1));
+
+        while(1)
+        {
+            scanf("%[^'\n']",message);
+            getchar();
+            dialogueSrv (sock, svc, message);
+        }
+        close(sock);
+        return 0;
+    }
+
+    if (reponse="joueur 2")
+    {
+        int sock;
+	    struct sockaddr_in svc;
+	    char message[MAX_BUFF];
+
+        sock=createSocketListenClt(svc,atoi(6012),inet_addr(127.0.0.1));
 
         while(1)
         {
@@ -193,4 +211,18 @@ void gerant ()
                 close(sd3);
             }
         }
+        int sock;
+	    struct sockaddr_in svc;
+	    char message[MAX_BUFF];
+
+        sock=createSocketListenClt(svc,atoi(6010),inet_addr(127.0.0.1));
+
+        while(1)
+        {
+            scanf("%[^'\n']",message);
+            getchar();
+            dialogueSrv (sock, svc, message);
+        }
+        close(sock);
+        return 0;
 }
