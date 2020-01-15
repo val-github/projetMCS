@@ -25,12 +25,12 @@ int nbPoints[100][3];
 
 /* ------------------------------------------------------------------------ */
 /**
- *  \fn         int main()
+ *  \fn         int mainPartie()
  *
  *  \brief      Fonction main du fichier
  */
 /* ------------------------------------------------------------------------ */
-int main()
+void mainPartie()
 {
     /* IL RESTE A FINIR 
       - faire le tableau de victoire
@@ -39,8 +39,6 @@ int main()
     printf("Bonjour dans cette partie de poker\n");
     creationPaquetMelange();
     creationListeCartes();
-
-    return 0;
 }
 
 /* ------------------------------------------------------------------------ */

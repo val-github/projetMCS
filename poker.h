@@ -51,6 +51,7 @@ void gerant ();
 void cltPartie(int);
 
 /* ******************* PROTOTYPES ******************** */
+void mainPartie();
 int random_6_13();
 int random_0_3();
 void creationPaquetMelange();
