@@ -20,14 +20,14 @@
  *  \brief      Fonction main du fichier
  */
 /* ------------------------------------------------------------------------ */
-int main(char **argv)
+int main(int argc,char **argv)
 {
     int sock;
 	struct sockaddr_in svc;
 	char message[MAX_BUFF];
 
 
-	sock=createSocketListenClt(svc,atoi(argv[2]),inet_addr(127.0.0.1));
+	sock=createSocketListenClt(svc,atoi(argv[2]),inet_addr(argv[1]));
 
     while(1)
     {
