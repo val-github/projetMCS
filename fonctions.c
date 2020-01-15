@@ -107,46 +107,42 @@ void dialogueClt (int sd, struct sockaddr_in clt)
 void dialogueSrv (int sd, struct sockaddr_in srv, char *message)
 {
     char reponse[MAX_BUFF];
-    
-    socklen_t cltlen;
-    // Envoi du message au serveur
-    CHECK(write(sd, message, sizeof(message)+1), "Can't send");//envoie au read du serveur
     CHECK(read(sd, reponse, sizeof(reponse)), "Can't send");//reponse du write du client
-    if (reponse="joueur 1; rôle d'hébergeur transmis")
+    if (reponse=="joueur 1; rôle d'hébergeur transmis")
     {
-        gerant()
+        gerant();
     }
-    if (reponse="joueur 1")
+    if (reponse=="joueur 1")
     {
         int sock;
 	    struct sockaddr_in svc;
 	    char message[MAX_BUFF];
 
-        sock=createSocketListenClt(svc,atoi(6011),inet_addr(127.0.0.1));
+        sock=createSocketListenClt(svc,atoi(6011),inet_addr(INADDR_SVC));
 
         while(1)
         {
             scanf("%[^'\n']",message);
             getchar();
-            dialogueSrv (sock, svc, message);
+            cltPartie (sock);
         }
         close(sock);
         return 0;
     }
 
-    if (reponse="joueur 2")
+    if (reponse=="joueur 2")
     {
         int sock;
 	    struct sockaddr_in svc;
 	    char message[MAX_BUFF];
 
-        sock=createSocketListenClt(svc,atoi(6012),inet_addr(127.0.0.1));
+        sock=createSocketListenClt(svc,atoi(6012),inet_addr(INADDR_SVC));
 
         while(1)
         {
             scanf("%[^'\n']",message);
             getchar();
-            dialogueSrv (sock, svc, message);
+            cltPartie (sock);
         }
         close(sock);
         return 0;
@@ -168,19 +164,20 @@ void gerant ()
         int se1,se2,se3,sd1,sd2,sd3;
         struct sockaddr_in svc1,svc2,svc3,clt;
 
-        se1=createSocketListenSvc(svc1,6010,INADDR_ANY);
-        se2=createSocketListenSvc(svc2,6011,INADDR_ANY);
-        se3=createSocketListenSvc(svc3,6012,INADDR_ANY);
+        se1=createSocketListenSvc(svc1,6010,INADDR_SVC);
+        se2=createSocketListenSvc(svc2,6011,INADDR_SVC);
+        se3=createSocketListenSvc(svc3,6012,INADDR_SVC);
 
         pid_t pid1, pid2, pid3;
+        socklen_t cltlen;
         pid1 = fork();
         if (pid1 == 0)
         {
             while (1) 
             { 
                 // Attente d’un appel
-                cltLen = sizeof(clt);
-                CHECK(sd1=accept(se1, (struct sockaddr *)&clt, &cltLen) , "Can't connect");
+                cltlen = sizeof(clt);
+                CHECK(sd1=accept(se1, (struct sockaddr *)&clt, &cltlen) , "Can't connect");
                 
                 close(sd1);
             }
@@ -192,8 +189,8 @@ void gerant ()
             while (1) 
             { 
                 // Attente d’un appel
-                cltLen = sizeof(clt);
-                CHECK(sd2=accept(se2, (struct sockaddr *)&clt, &cltLen) , "Can't connect");
+                cltlen = sizeof(clt);
+                CHECK(sd2=accept(se2, (struct sockaddr *)&clt, &cltlen) , "Can't connect");
                 
                 close(sd2);
             }
@@ -205,8 +202,8 @@ void gerant ()
             while (1) 
             { 
                 // Attente d’un appel
-                cltLen = sizeof(clt);
-                CHECK(sd3=accept(se3, (struct sockaddr *)&clt, &cltLen) , "Can't connect");
+                cltlen = sizeof(clt);
+                CHECK(sd3=accept(se3, (struct sockaddr *)&clt, &cltlen) , "Can't connect");
                 
                 close(sd3);
             }
@@ -215,14 +212,27 @@ void gerant ()
 	    struct sockaddr_in svc;
 	    char message[MAX_BUFF];
 
-        sock=createSocketListenClt(svc,atoi(6010),inet_addr(127.0.0.1));
+        sock=createSocketListenClt(svc,atoi(6010),inet_addr(INADDR_SVC));
 
         while(1)
         {
-            scanf("%[^'\n']",message);
-            getchar();
-            dialogueSrv (sock, svc, message);
+            cltPartie (sock);
         }
+        
         close(sock);
         return 0;
+}
+
+/* ------------------------------------------------------------------------ */
+/**
+ *  \fn         void cltPartie ()
+ * 
+ *  \brief      La fonction contient les instructions qui serviront 
+ *              à gérer la partie coté joureurs
+ */
+/* ------------------------------------------------------------------------ */
+
+void cltPartie(int sock)
+{
+    
 }

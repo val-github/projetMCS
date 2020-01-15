@@ -75,7 +75,6 @@ int main()
             cltLen = sizeof(clt);
             CHECK(sd1=accept(se1, (struct sockaddr *)&clt, &cltLen) , "Can't connect");
             // attribution du role d'hébergeur de la partie
-            char reponse[MAX_BUFF];
             // Envoi du message à l'hébergeur
             char rq;
             rq="joueur 1; rôle d'hébergeur transmis";
