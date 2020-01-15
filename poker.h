@@ -47,6 +47,8 @@ int createSocketListenClt(struct sockaddr_in ,int , int);
 int createSocketListenSvc(struct sockaddr_in ,int , int);
 void dialogueClt (int , struct sockaddr_in);
 void dialogueSrv (int , struct sockaddr_in , char *);
+void gerant ();
+void cltPartie(int);
 
 /* ******************* PROTOTYPES ******************** */
 int random_6_13();

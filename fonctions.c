@@ -68,11 +68,6 @@ int createSocketListenSvc(struct sockaddr_in svc,int port, int adresse)
     return se;
 }
 
-int connection(struct sockaddr_in svc,int port, int adresse)
-{
-
-}
-
 /* ------------------------------------------------------------------------ */
 /**
  *  \fn         void dialogueClt(int, struct sockaddr_in)
@@ -118,7 +113,7 @@ void dialogueSrv (int sd, struct sockaddr_in srv, char *message)
 	    struct sockaddr_in svc;
 	    char message[MAX_BUFF];
 
-        sock=createSocketListenClt(svc,atoi(6011),inet_addr(INADDR_SVC));
+        sock=createSocketListenClt(svc,6011,inet_addr(INADDR_SVC));
 
         while(1)
         {
@@ -127,7 +122,6 @@ void dialogueSrv (int sd, struct sockaddr_in srv, char *message)
             cltPartie (sock);
         }
         close(sock);
-        return 0;
     }
 
     if (reponse=="joueur 2")
@@ -136,7 +130,7 @@ void dialogueSrv (int sd, struct sockaddr_in srv, char *message)
 	    struct sockaddr_in svc;
 	    char message[MAX_BUFF];
 
-        sock=createSocketListenClt(svc,atoi(6012),inet_addr(INADDR_SVC));
+        sock=createSocketListenClt(svc,6012,inet_addr(INADDR_SVC));
 
         while(1)
         {
@@ -145,9 +139,9 @@ void dialogueSrv (int sd, struct sockaddr_in srv, char *message)
             cltPartie (sock);
         }
         close(sock);
-        return 0;
     }
 }
+
 /* ------------------------------------------------------------------------ */
 /**
  *  \fn         void gerant ()
@@ -156,17 +150,14 @@ void dialogueSrv (int sd, struct sockaddr_in srv, char *message)
  *              de connecter les différents clients à l'hébergeur
  */
 /* ------------------------------------------------------------------------ */
-
-
-
 void gerant ()
 {
         int se1,se2,se3,sd1,sd2,sd3;
         struct sockaddr_in svc1,svc2,svc3,clt;
 
-        se1=createSocketListenSvc(svc1,6010,INADDR_SVC);
-        se2=createSocketListenSvc(svc2,6011,INADDR_SVC);
-        se3=createSocketListenSvc(svc3,6012,INADDR_SVC);
+        se1=createSocketListenSvc(svc1,6010,atoi(INADDR_SVC));
+        se2=createSocketListenSvc(svc2,6011,atoi(INADDR_SVC));
+        se3=createSocketListenSvc(svc3,6012,atoi(INADDR_SVC));
 
         pid_t pid1, pid2, pid3;
         socklen_t cltlen;
@@ -212,7 +203,7 @@ void gerant ()
 	    struct sockaddr_in svc;
 	    char message[MAX_BUFF];
 
-        sock=createSocketListenClt(svc,atoi(6010),inet_addr(INADDR_SVC));
+        sock=createSocketListenClt(svc,6010,inet_addr(INADDR_SVC));
 
         while(1)
         {
@@ -220,7 +211,6 @@ void gerant ()
         }
         
         close(sock);
-        return 0;
 }
 
 /* ------------------------------------------------------------------------ */
@@ -231,7 +221,6 @@ void gerant ()
  *              à gérer la partie coté joureurs
  */
 /* ------------------------------------------------------------------------ */
-
 void cltPartie(int sock)
 {
     
