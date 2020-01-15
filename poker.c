@@ -11,12 +11,17 @@
  *  \version    1.0
 */
 #include "poker.h"
-//#include "fonctions.c"
 #include "pile.c"
 
 /* ******************** VARIABLES GLOBALES ******************** */
+int nombreJoueur=3;
+int paquetMelange[32][2];
 Pile pile;
-int nbJoueurs=3;
+int tailleDist=0,tailleTapis=0;
+int distribution[32][3];
+int tapis[5][2];
+int nbPoints[100][3];
+
 
 /* ------------------------------------------------------------------------ */
 /**
@@ -27,24 +32,25 @@ int nbJoueurs=3;
 /* ------------------------------------------------------------------------ */
 int main()
 {
+    /* IL RESTE A FINIR 
+      - faire le tableau de victoire
+      - dire qui a gagner     */
+
     printf("Bonjour dans cette partie de poker\n");
     creationPaquetMelange();
     creationListeCartes();
-    printf("\n\n\n");
-
-    distribuer2Cartes();
 
     return 0;
 }
 
 /* ------------------------------------------------------------------------ */
 /**
- *  \fn         int random_7_14()
+ *  \fn         int random_6_13()
  *
- *  \brief      La fonction renvoie un chiffre aleatoire entre 7 et 14
+ *  \brief      La fonction renvoie un chiffre aleatoire entre 6 et 13
  */
 /* ------------------------------------------------------------------------ */
-int random_7_14()
+int random_6_13()
 {
     // Permet de chager a quel moment commence l'aleatoire 
     // donc d'avoir un tableau aleatoire qui change
@@ -54,7 +60,7 @@ int random_7_14()
         srand (time(NULL));
         first = 1;
     }
-    return rand()%(15-7)+7;// donne un chiffre aleatoire entre 7 et 14
+    return rand()%(14-6)+6;// donne un chiffre aleatoire entre 6 et 13
 }
 
 /* ------------------------------------------------------------------------ */
@@ -88,8 +94,9 @@ void creationListeCartes()
 
     for(int i=0;i<32;i++)
     {
-            pile=empiler(pile,paquetMelange[i][0],paquetMelange[i][1]);
+        pile=empiler(pile,paquetMelange[i][0],paquetMelange[i][1]);
     }
+
     afficher(pile);
 }
 
@@ -107,9 +114,9 @@ void creationPaquetMelange()
 
     while(ligne!=32)
     {
-        carte=random_7_14();
+        carte=random_6_13();
         couleur=random_0_3();
-        
+
         if(verifierCarte(paquetMelange, ligne, carte, couleur)==0) //carte n'existe pas
         {
             paquetMelange[ligne][0]=carte;
@@ -117,11 +124,6 @@ void creationPaquetMelange()
             ligne++;
         }
     }
-    
-    /*for(int i=0;i<32;i++)
-    {
-        printf("ligne %d : [%d,%d]\n",i,paquetMelange[i][0],paquetMelange[i][1]);
-    }*/
 }
 
 /* ------------------------------------------------------------------------ */
@@ -131,17 +133,15 @@ void creationPaquetMelange()
  *  \brief      La fonction enleve les deux premieres carte de la pile et les donne
  *              au premier joueur puis fais la meme chose pour les autres joueurs.
  *              Les cartes distribuées sont enregistrée par le serveur dans un tableau distribution.
- *              En premiere colonne le numero de la carte, en deuxieme colonne sa couleur et en troisime 
- *              colonne le numero du jours a qui elle a etait donnée.
+ *              En premiere colonne le numero de la carte, en deuxieme colonne sa couleur et en troisieme 
+ *              colonne le numéro du joueur à qui elle a etait donnée.
  */
 /* ------------------------------------------------------------------------ */
 void distribuer2Cartes()
 {
     int tab[2];
-    int ligne=0;
-    //distribution[32][3]
 
-    for(int j=0;j<nbJoueurs;j++)
+    for(int j=0;j<nombreJoueur;j++)
     {
         //distribuer au joueur 2 cartes
         for (int i=0; i<2; i++)
@@ -151,24 +151,21 @@ void distribuer2Cartes()
             {
                 printf("Pile vide");
             }
-        
-            printf("%d, %d\n",tab[0],tab[1]);
-            distribution[ligne][0] = tab[0];
-            distribution[ligne][1] = tab[1];
-            distribution[ligne][2] = j+1; //numero du jour qui a les cartes
-            ligne++;
+            else
+            {
+                //printf("%d, %d\n",tab[0],tab[1]);
+                distribution[tailleDist][0] = tab[0];
+                distribution[tailleDist][1] = tab[1];
+                distribution[tailleDist][2] = j+1; //numero du joueur qui a les cartes
+                tailleDist++;
+            }
         }
-    }
-
-    for(int i=0;i<32;i++)
-    {
-        printf(" Joueur %d : ligne %d : [%d,%d]\n",distribution[i][2],i,distribution[i][0],distribution[i][1]);
     }
 }
 
 /* ------------------------------------------------------------------------ */
 /**
- *  \fn         int verifierCarte(int paquetMelange[32][2],int , int , int )
+ *  \fn         int verifierCarte(int tab[32][2],int , int , int )
  *
  *  \brief      La fonction vérifie si la combinaison carte couleur existe deja dans le  tableau.
  *              Elle renvoie 1 si la carte exite et 0 si elle n'existe pas
@@ -187,4 +184,49 @@ int verifierCarte(int tab[32][2],int ligne, int carte, int couleur)
         }
     }
     return 0; //la carte n'existe pas
+}
+
+/* ------------------------------------------------------------------------ */
+/**
+ *  \fn         void affichageDistribution()
+ *
+ *  \brief      La fonction affiche le tableau distribution[32][3]
+ */
+/* ------------------------------------------------------------------------ */
+void affichageDistribution()
+{
+    for(int i=0;i<32;i++)
+    {
+        printf(" Joueur %d : ligne %d : [%d,%s]\n",distribution[i][2],i,distribution[i][0],cartesCouleur(distribution[i][1]));
+    }
+}
+
+/* ------------------------------------------------------------------------ */
+/**
+ *  \fn         char *cartesCouleur(int)
+ *
+ *  \brief      La fonction transforme un int en char (0 -> coeur)
+ */
+/* ------------------------------------------------------------------------ */
+char *cartesCouleur(int couleur)
+{
+    switch(couleur)
+    {
+        case 0 :
+            return "coeur";
+        break;
+        
+        case 1 :
+            return "carreau";
+        break;
+    
+        case 2 :
+            return "trefle";
+        break;
+
+        case 3 :
+            return "pique";
+        break;
+    }
+    return "ko";
 }

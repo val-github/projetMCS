@@ -41,9 +41,6 @@
 
 /* ******************** VARIABLES GLOBALES ******************** */
 char buffer[MAX_BUFF];
-//int nbJoueurs=3;
-int paquetMelange[32][2];
-int distribution[32][3];
 
 /* ******************* PROTOTYPES ******************** */
 int createSocketListenClt(struct sockaddr_in ,int , int);
@@ -52,9 +49,18 @@ void dialogueClt (int , struct sockaddr_in);
 void dialogueSrv (int , struct sockaddr_in , char *);
 
 /* ******************* PROTOTYPES ******************** */
-int random_7_14();
+int random_6_13();
 int random_0_3();
 void creationPaquetMelange();
-int verifierCarte(int tab[32][2], int, int , int );
+int verifierCarte(int tab[32][2], int, int , int);
 void creationListeCartes();
 void distribuer2Cartes();
+int emplacementCarte(int tab[32][3],int *, int, int, int);
+void changerCartes(int);
+int couleurCartes(char *);
+char *cartesCouleur(int);
+void affichageDistribution();
+void affichageTapis();
+void distribuerTapis(int);
+void affichageFenetre(int);
+void creationNbPoints();
