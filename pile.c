@@ -5,7 +5,7 @@ typedef struct morceauPile
 {
     int valeur[2];
     struct morceauPile *next;
-}morceauPile, *Pile;
+}   morceauPile, *Pile;
 
 
 /**

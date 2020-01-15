@@ -25,7 +25,7 @@ int nbPoints[100][3];
 
 /* ------------------------------------------------------------------------ */
 /**
- *  \fn         int mainPartie()
+ *  \fn         void mainPartie()
  *
  *  \brief      Fonction main du fichier
  */
