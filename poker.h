@@ -51,14 +51,13 @@ void gerant ();
 void cltPartie(int);
 
 /* ******************* PROTOTYPES ******************** */
-void mainPartie();
 int random_6_13();
 int random_0_3();
 void creationPaquetMelange();
 int verifierCarte(int tab[32][2], int, int , int);
 void creationListeCartes();
 void distribuer2Cartes();
-int emplacementCarte(int tab[32][3],int *, int, int, int);
+int emplacementCarte(int tab[6][3],int *, int, int, int);
 void changerCartes(int);
 int couleurCartes(char *);
 char *cartesCouleur(int);
@@ -66,4 +65,11 @@ void affichageDistribution();
 void affichageTapis();
 void distribuerTapis(int);
 void affichageFenetre(int);
-void creationNbPoints();
+void creationNbPoints(int joueur);
+void demanderMainFinale(int);
+int existeTapis(int, int, int, int, int);
+int couleur(int);
+int paire(int, int);
+int brelan(int);
+int carre(int);
+int suite(int);

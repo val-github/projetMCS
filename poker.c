@@ -17,11 +17,11 @@
 int nombreJoueur=3;
 int paquetMelange[32][2];
 Pile pile;
-int tailleDist=0,tailleTapis=0;
-int distribution[32][3];
+int tailleDist=0,tailleTapis=0,tailleMain=0;
+int distribution[6][3];
 int tapis[5][2];
-int nbPoints[100][3];
-
+int nbPoints[3];
+int mainFinale[15][3];
 
 /* ------------------------------------------------------------------------ */
 /**
@@ -32,47 +32,340 @@ int nbPoints[100][3];
 /* ------------------------------------------------------------------------ */
 void mainPartie()
 {
-    /* IL RESTE A FINIR 
-      - faire le tableau de victoire
-      - dire qui a gagner     */
+    /* IL RESTE A FINIR
+      - tester suite sans couleur
+      - changer carte taper autre chose qu'un chiffre => erreur
+      - dire qui a gagner
+      - adresse de tableau     */
 
     printf("Bonjour dans cette partie de poker\n");
     creationPaquetMelange();
     creationListeCartes();
-}
-
-/* ------------------------------------------------------------------------ */
-/**
- *  \fn         int random_6_13()
- *
- *  \brief      La fonction renvoie un chiffre aleatoire entre 6 et 13
- */
-/* ------------------------------------------------------------------------ */
-int random_6_13()
-{
-    // Permet de chager a quel moment commence l'aleatoire 
-    // donc d'avoir un tableau aleatoire qui change
-    static int first = 0;
-    if (first == 0)
+    
+    printf("1er tour\n");
+    distribuer2Cartes();
+    distribuerTapis(2);
+    printf("\n\n\n");
+    for(int i=1;i<nombreJoueur+1;i++)
     {
-        srand (time(NULL));
-        first = 1;
+        affichageFenetre(i);
+        changerCartes(i);
+        printf("\n\n\n\n\n\n\n\n\n\n");
     }
-    return rand()%(14-6)+6;// donne un chiffre aleatoire entre 6 et 13
+    
+    printf("2eme tour\n");
+    distribuerTapis(3);
+    for(int i=1;i<nombreJoueur+1;i++)
+    {
+        printf("\n\n");
+        affichageFenetre(i);
+        demanderMainFinale(i);
+        printf("\n\n\n\n\n\n\n\n\n\n");
+    }
+    /*tailleMain=15;
+    int carte=0;
+
+    int mainFinale[15][3]={ {11,1,1},{8,1,1},{10,1,1},{9,2,1},{7,3,1},
+                            {10,0,2},{9,1,2},{9,2,2},{9,2,2},{9,1,2},
+                            {10,1,3},{11,0,3},{12,1,3},{13,0,3},{9,2,3}};
+    for(int i=0;i<tailleMain;i++)
+    {
+        printf("joueur %d : [%d,%s]\n",mainFinale[i][2],mainFinale[i][0],cartesCouleur(mainFinale[i][1]));
+    }*/
+
+    for(int i=1;i<nombreJoueur+1;i++)
+    {
+        creationNbPoints(i);
+    }
+
+    for(int i=1;i<nombreJoueur+1;i++)
+    {
+        printf("joueur %d : %d\n",i,nbPoints[i]);
+    }
+}
+
+
+/* ------------------------------------------------------------------------ */
+/**
+ *  \fn         void affichageDistribution()
+ *
+ *  \brief      La fonction affiche le tableau distribution[32][3]
+ */
+/* ------------------------------------------------------------------------ */
+void affichageDistribution() //affiche le tableau distribution
+{
+    for(int i=0;i<6;i++)
+    {
+        printf(" Joueur %d : ligne %d : [%d,%s]\n",distribution[i][2],i,distribution[i][0],cartesCouleur(distribution[i][1]));
+    }
 }
 
 /* ------------------------------------------------------------------------ */
 /**
- *  \fn         int random_0_3()
+ *  \fn         void affichageFenetre(int)
  *
- *  \brief      La fonction renvoie un chiffre aléatoire entre 0 et 3
+ *  \brief      La fonction creer l'affichage cote joueur
  */
 /* ------------------------------------------------------------------------ */
-int random_0_3()
+
+void affichageFenetre(int joueur) //Creer l'affichage cote joueur
 {
-    return rand()%4;// donne un chiffre aleatoire entre 0 et 3
+    printf("\nJoueur %d\n\n\n",joueur);
+
+    printf("\tCartes communes\n");
+    for(int i=0;i<5;i++)
+    {
+        if(tapis[i][0]!=0)
+        {
+            printf("\t[%d,%s]",tapis[i][0],cartesCouleur(tapis[i][1]));
+        }
+    }
+    printf("\n\n\n\n");
+
+    printf("Mes cartes\n");
+    for(int i=0;i<6;i++)
+    {
+        if(distribution[i][2]==joueur)
+        {
+            printf("[%d,%s]\t",distribution[i][0],cartesCouleur(distribution[i][1]));
+        }
+    }
+    printf("\n");
 }
 
+
+void affichageTapis() //affiche le tableau distribution
+{
+    for(int i=0;i<5;i++)
+    {
+        printf("[%d,%s]\n",tapis[i][0],cartesCouleur(tapis[i][1]));
+    }
+}
+
+int brelan(int joueur)// dit si il y a un brelan dans le tableau final 0:non
+{
+    int i=0;
+    for(i=i+(joueur-1)*5;i<4+(joueur-1)*5;i++)
+    {
+        for(int j=i+1;j<5+(joueur-1)*5;j++)
+        {
+            if(mainFinale[i][0]==mainFinale[j][0])
+            {
+                for(int w=j+1;w<5+(joueur-1)*5;w++)
+                {
+                    if(mainFinale[j][0]==mainFinale[w][0])
+                    {
+                        //printf("i: %d, j: %d, w: %d, brelan : %d,%d,%d\n",i,j,w,mainFinale[i][0],mainFinale[j][0],mainFinale[w][0]);
+                        return mainFinale[i][0]; //il y a un brelan
+                    }
+                }
+            }
+        }
+    }
+    printf("pas brelan\n");
+    return 0; //faux
+}
+
+int carre(int joueur)
+{
+    for(int i=0+(joueur-1)*5;i<4+(joueur-1)*5;i++)
+    {
+        for(int j=i+1;j<5+(joueur-1)*5;j++)
+        {
+            if(mainFinale[i][0]==mainFinale[j][0])
+            {
+                for(int w=j+1;w<5+(joueur-1)*5;w++)
+                {
+                    if(mainFinale[j][0]==mainFinale[w][0])
+                    {
+                        for(int x=w+1;x<5+(joueur-1)*5;x++)
+                        {
+                            if(mainFinale[w][0]==mainFinale[x][0])
+                            {
+                                //printf("i: %d, j: %d, w: %d, x: %d carre : %d,%d,%d,%d\n",i,j,w,x,mainFinale[i][0],mainFinale[j][0],mainFinale[w][0],mainFinale[x][0]);
+                                return mainFinale[i][0]; //il y a un carre
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    //printf("pas carre\n");
+    return 0; //faux
+}
+
+/* ------------------------------------------------------------------------ */
+/**
+ *  \fn         char *cartesCouleur(int)
+ *
+ *  \brief      La fonction transforme un int en char (0 -> coeur)
+ */
+/* ------------------------------------------------------------------------ */
+char *cartesCouleur(int couleur)//transforme un int en char
+{
+    switch(couleur)
+    {
+        case 0 :
+            return "coeur";
+        break;
+        
+        case 1 :
+            return "carreau";
+        break;
+    
+        case 2 :
+            return "trefle";
+        break;
+
+        case 3 :
+            return "pique";
+        break;
+    }
+    return "ko";
+}
+
+void changerCartes(int joueur) //chaque joueur a la possibilite de changer ses cartes au premier tour
+{
+    int numero=-1,couleur=-1,nombre=-1,ligne=-1,fini=0;
+    char cCouleur[10];
+    int tab[2];
+
+    //printf("Joueur %d\n",joueur);
+    do
+    {
+        printf("Combien de cartes veux tu changer ? ");
+        scanf("%d",&nombre);
+        if(nombre>2 || nombre<0)
+        {
+            printf("Tu peux changer 2 cartes maximum.\n");
+        }
+    } while (nombre>2 || nombre<0);
+
+    if(nombre==1) //Le joueur veux changer une carte
+    {
+        do
+        {
+            printf("Quelle carte veux tu changer ?\n");
+            do
+            {
+                printf("Veuillez taper le numero de votre carte (entre 6 et 13) : ");
+                scanf("%d",&numero);
+                if(numero<6 || numero>13)
+                {
+                    printf("Tu n'as pas repondu correctement ! Ce chiffre n'est pas compris entre 6 et 13 !\n\n");
+                }
+            } while (6>numero || numero>14);
+            
+            do
+            {
+                printf("Veuillez taper la couleur de votre carte (coeur, carreau, trefle et pique) : ");
+                scanf("%s",cCouleur);
+                
+                couleur=couleurCartes(cCouleur);
+                if(couleur<0 || couleur>3)
+                {
+                    printf("Tu n'as pas repondu correctement ! Cette couleur n'existe pas !\n\n");
+                }
+            } while (couleur==-1);
+            
+            if(emplacementCarte(distribution,&ligne,numero,couleur,joueur)==0) // la carte n'existe pas
+            {
+                printf("Cette carte n'est pas en votre possession. Donc vous ne pouvez pas echanger cette carte.\n\n");
+                fini=0;
+            }
+            else
+            {
+                pile=depiler(pile,tab);
+                if(tab[0] == -1)
+                {
+                    printf("Pile vide");
+                }
+                else
+                {
+                    distribution[ligne][0] = tab[0];
+                    distribution[ligne][1] = tab[1];
+                    fini=1;
+                }
+            }
+        } while (fini!=1);
+    }
+    else if(nombre==2)//Le joueur veux echanger ses deux cartes 
+    {
+        for (int i=0; i<2; i++)//distribuer au joueur 2 cartes
+        {
+            pile=depiler(pile,tab);
+            if(tab[0] == -1)
+            {
+                printf("Pile vide");
+            }
+            else
+            {
+                //printf("%d, %d\n",tab[0],tab[1]);
+                for(int j=0;j<6;j++)//on cherche les lignes du tableau qui appatiennent au joueur
+                {
+                    if(distribution[j][2] == joueur)
+                    {
+                        distribution[j+i][0] = tab[0];
+                        distribution[j+i][1] = tab[1];
+                        break;
+                    }
+                }
+            }
+        }
+    }
+}
+
+int couleur(int joueur)//si ok=0 les 5 cartes ne sont pas de la meme couleur, si ok=5 les 5 cartes sont de la meme couleur
+{
+    int couleur=-1,ok=0;
+    for(int i=0;i<15;i++)
+    {
+        if(mainFinale[i][2]==joueur) 
+        {
+            if(couleur==-1)
+            {
+                couleur=mainFinale[i][1];
+                ok=1;
+            }
+            else if(mainFinale[i][1]==couleur)
+            {
+                ok++;
+            }
+            else
+            {
+                ok=0;
+                break;
+            }
+            
+        }
+    }
+    return ok;
+}
+
+int couleurCartes(char *cCouleur)//transforme un char en int
+{
+    int couleur=-1;
+
+    if(strcmp(cCouleur,"coeur")==0)
+    {
+        couleur=0;
+    }
+    else if(strcmp(cCouleur,"carreau")==0)
+    {
+        couleur=1;
+    }
+    else if(strcmp(cCouleur,"trefle")==0)
+    {
+        couleur=2;
+    }
+    else if(strcmp(cCouleur,"pique")==0)
+    {
+        couleur=3;
+    }
+
+    return couleur;
+}
 /* ------------------------------------------------------------------------ */
 /**
  *  \fn         void creationListeCartes()
@@ -95,7 +388,92 @@ void creationListeCartes()
         pile=empiler(pile,paquetMelange[i][0],paquetMelange[i][1]);
     }
 
-    afficher(pile);
+    //afficher(pile);
+}
+
+void creationNbPoints(int joueur)
+{
+    //printf("joueur = %d\n",joueur);
+    int carte=0, cartePaire=0, carteBrelan=0;
+    
+    if(couleur(joueur)==5)
+    {
+        //printf("joueur %d : couleur",joueur);
+        nbPoints[joueur]=15;
+        if(suite(joueur)==4)//c'est une suite
+        {
+            //printf("joueur %d : suite",joueur);
+            nbPoints[joueur]=210;
+        }
+    }
+    else
+    {
+        if(suite(joueur)==4)//c'est une suite
+        {
+            //printf("joueur %d : suite",joueur);
+            nbPoints[joueur]=210;
+        }
+        carte=carre(joueur);
+        if(carte==0)//pas de carre
+        {
+            carte=brelan(joueur);
+            if(carte==0)//pas de brelan
+            {
+                carte=paire(joueur,carte);
+                if(carte==0)//pas de paire
+                {
+                    //printf("joueur %d : pas de paire\n",joueur);
+                    nbPoints[joueur]=0;
+                }
+                else//il y a une paire
+                {
+                    cartePaire=carte;
+                    //printf("joueur %d : paire de %d\n",joueur,cartePaire);
+                    nbPoints[joueur]=1*cartePaire;
+                    carte=paire(joueur,carte);
+                    if(carte==0)//pas de paire
+                    {
+                        //printf("joueur %d : pas de 2e paire\n",joueur);
+                    }
+                    else//il y a 2 paires
+                    {
+                        //printf("joueur %d : il y a 2 paires de %d et %d\n",joueur,cartePaire, carte);
+                        if(carte>cartePaire)
+                        {
+                            nbPoints[joueur]=2*carte;
+                        }
+                        else
+                        {
+                            nbPoints[joueur]=2*cartePaire;
+                        }
+                            
+                    }
+                }
+                
+            }
+            else//il y a un brelan
+            {
+                carteBrelan=carte;
+                //printf("joueur %d : brelan de %d\n",joueur, carteBrelan);
+                nbPoints[joueur]=3*carteBrelan;
+                carte=paire(joueur,carte);
+                if(carte==0)//pas de paire
+                {
+                    //printf("joueur %d : pas de paire\n",joueur);
+                }
+                else //il y a un full
+                {
+                    //printf("joueur %d : il y a un full de %d et %d\n",joueur,carteBrelan,carte);
+                    nbPoints[joueur]=6*carteBrelan;
+                }
+            }
+        }
+        else//il y a un carre
+        {
+            //printf("joeur %d : il y a un carre de %d\n",joueur,carte);
+            nbPoints[joueur]=7*carte;
+        }
+    }
 }
 
 /* ------------------------------------------------------------------------ */
@@ -124,6 +502,98 @@ void creationPaquetMelange()
     }
 }
 
+void demanderMainFinale(int joueur)//creer la mainFinal
+{
+    int numero=-1,couleur=-1,ligne=-1,fini=1,ok=1;
+    char cCouleur[10];
+    int tab[2];
+
+    for(int i=0;i<6;i++)
+    {
+        if(distribution[i][2]==joueur)
+        {
+            mainFinale[tailleMain][0]=distribution[i][0];
+            mainFinale[tailleMain][1]=distribution[i][1];
+            mainFinale[tailleMain][2]=joueur;
+            tailleMain++;
+        }
+    }
+
+    printf("Quelles sont les 3 cartes de la table que tu veux associées ta main ?\n");
+
+    do
+    {
+        printf("Carte %d\n",fini);
+
+        do
+        {       
+            do
+            {
+                printf("Veuillez taper le chiffre d'une des carte de la table : ");
+                scanf("%d",&numero);
+                if(existeTapis(numero,-1,joueur,1,fini)==0)
+                {
+                    printf("Tu n'as pas repondu correctement ! La table n'a pas une carte de ce chiffre !\n\n");
+                    ok=0;
+                }
+                else
+                {
+                    ok=1;
+                }
+            } while (ok!=1);
+            
+            ok=0;
+            do
+            {
+                if(ok==0)
+                {
+                    printf("Vous avez choisi le chiffre %d. Quelle couleur est cette carte ?\n",numero);
+                    do
+                    {
+                        printf("Veuillez taper la couleur de votre carte (coeur, carreau, trefle et pique) : ");
+                        scanf("%s",cCouleur);
+                        
+                        couleur=couleurCartes(cCouleur);
+                        if(couleur<0 || couleur>3)
+                        {
+                            printf("Tu n'as pas repondu correctement ! Cette couleur n'existe pas !\n\n");
+                            ok=0;
+                            printf("Vous avez choisi le chiffre %d. Quelle couleur est cette carte ?\n",numero);
+                        }
+                        else
+                        {
+                            ok=1;
+                        }
+                    } while (ok!=1);
+                }
+
+                if(existeTapis(numero,couleur,joueur,2,fini)==0)
+                {
+                    printf("Cette carte n'existe pas sur le tapis\n\n");
+                    ok=0;
+                }
+                else if(existeTapis(numero,couleur,joueur,2,fini)==2)
+                {
+                    printf("Vous avez deja choisi cette carte !\n");
+                    printf("Veuillez en choisir une autre.\n");
+                    ok=2;
+                }
+                else
+                {
+                    mainFinale[tailleMain][0]=numero;
+                    mainFinale[tailleMain][1]=couleur;
+                    mainFinale[tailleMain][2]=joueur;
+                    tailleMain++;
+                    ok=1;
+                }
+            } while (ok==0);
+
+        }while (ok!=1);
+
+        fini++;
+    } while (fini!=4);
+}
+
 /* ------------------------------------------------------------------------ */
 /**
  *  \fn         void distribuer2Cartes()
@@ -135,7 +605,7 @@ void creationPaquetMelange()
  *              colonne le numéro du joueur à qui elle a etait donnée.
  */
 /* ------------------------------------------------------------------------ */
-void distribuer2Cartes()
+void distribuer2Cartes() //on distribu 2 cartes aux joueurs
 {
     int tab[2];
 
@@ -161,6 +631,155 @@ void distribuer2Cartes()
     }
 }
 
+void distribuerTapis(int nbCartes) //on distribuer nbCartes sur la zoner centrale
+{
+    int tab[2];
+
+    for(int i=0;i<nbCartes;i++)
+    {
+        pile=depiler(pile,tab);
+        if(tab[0] == -1)
+        {
+            printf("Pile vide");
+        }
+        else
+        {
+            //printf("%d, %d\n",tab[0],tab[1]);
+            tapis[tailleTapis][0] = tab[0];
+            tapis[tailleTapis][1] = tab[1];
+            tailleTapis++;
+        }        
+    }
+}
+
+int emplacementCarte(int tab[6][3],int *ligne, int carte, int couleur, int joueur) // trouve l'emplacement de la carte si elle existe
+{
+    for (int i=0;i<6;i++)
+    {
+        if(tab[i][2] == joueur)
+        {
+            if(tab[i][1] == couleur)
+            {
+                if(tab[i][0] == carte)
+                {
+                    *ligne=i;
+                    return 1; //la carte existe
+                }
+            }
+        }
+    }
+    return 0; //la carte n'existe pas
+}
+
+int existeTapis(int nombre, int couleur, int joueur, int cas, int tour)//verifie si la carte existe sur le tapis et si on ne l'a deja ajouter dans MainFinal
+{
+    if(tour==1)
+    {
+        if(cas==1)// le nombre existe ?
+        {
+            for (int i=0;i<5;i++)
+            {
+                if(tapis[i][0] == nombre)
+                {
+                    return 1; //la nombre existe existe
+                }
+            }
+        }
+        else if(cas==2)
+        {
+            for (int i=0;i<5;i++)
+            {
+                if(tapis[i][1] == couleur)
+                {
+                    if(tapis[i][0] == nombre)
+                    {
+                        return 1; //la carte existe
+                    }
+                }
+            }
+        }
+    }
+    else
+    {
+        if(cas==1)// le nombre existe ?
+        {
+            for (int i=0;i<5;i++)
+            {
+                if(tapis[i][0] == nombre)
+                {
+                    return 1; //la nombre existe existe
+                }
+            }
+        }
+        else if(cas==2)
+        {
+            for (int i=0;i<5;i++)
+            {
+                if(tapis[i][1] == couleur)
+                {
+                    if(tapis[i][0] == nombre)
+                    {
+                        for(int j=0;j<tailleMain+1;j++)
+                        {
+                            if(mainFinale[j][2]==joueur)
+                            {
+                                if(mainFinale[j][1] == couleur)
+                                {
+                                    if(mainFinale[j][0] == nombre)
+                                    {
+                                        return 2; //la carte a deja etait selectionne
+                                    }
+                                }
+                            }
+                        }
+                        return 1; //la carte existe
+                    }
+                }
+            }
+        }    
+    }
+    return 0; //la carte n'existe pas
+}
+
+int paire(int joueur,int carte)// dit si il y a une paire dans le tableau final 0:non
+{
+    int i=0;
+    if(carte==0)
+    {
+        for(i=i+(joueur-1)*5;i<4+(joueur-1)*5;i++)
+        {
+            //printf("carte 1 => %d : %d\n",i,mainFinale[i][0]);
+            for(int j=i+1;j<5+(joueur-1)*5;j++)
+            {
+                //printf("carte 2 => %d : %d\n",j,mainFinale[j][0]);
+                if(mainFinale[i][0]==mainFinale[j][0])
+                {
+                    //printf("i: %d, j: %d, paire : %d,%d\n",i,j,mainFinale[i][0],mainFinale[j][0]);
+                    return mainFinale[i][0]; //il y a une paire
+                }
+            }
+        }
+    }
+    else
+    {
+        for(i=i+(joueur-1)*5;i<4+(joueur-1)*5;i++)
+        {
+            if(mainFinale[i][0]!=carte)
+            {
+                for(int j=i+1;j<5+(joueur-1)*5;j++)
+                {
+                    if(mainFinale[i][0]==mainFinale[j][0])
+                    {
+                        //printf("i: %d, j: %d, paire : %d,%d\n",i,j,mainFinale[i][0],mainFinale[j][0]);
+                        return mainFinale[i][0]; //il y a une paire
+                    }
+                }
+            }
+        }
+    }
+    //printf("pas paire\n");
+    return 0; //faux
+}
 /* ------------------------------------------------------------------------ */
 /**
  *  \fn         int verifierCarte(int tab[32][2],int , int , int )
@@ -184,47 +803,83 @@ int verifierCarte(int tab[32][2],int ligne, int carte, int couleur)
     return 0; //la carte n'existe pas
 }
 
+
+
 /* ------------------------------------------------------------------------ */
 /**
- *  \fn         void affichageDistribution()
+ *  \fn         int random_0_3()
  *
- *  \brief      La fonction affiche le tableau distribution[32][3]
+ *  \brief      La fonction renvoie un chiffre aléatoire entre 0 et 3
  */
 /* ------------------------------------------------------------------------ */
-void affichageDistribution()
+int random_0_3()
 {
-    for(int i=0;i<32;i++)
-    {
-        printf(" Joueur %d : ligne %d : [%d,%s]\n",distribution[i][2],i,distribution[i][0],cartesCouleur(distribution[i][1]));
-    }
+    return rand()%4;// donne un chiffre aleatoire entre 0 et 3
 }
 
+
 /* ------------------------------------------------------------------------ */
 /**
- *  \fn         char *cartesCouleur(int)
+ *  \fn         int random_6_13()
  *
- *  \brief      La fonction transforme un int en char (0 -> coeur)
+ *  \brief      La fonction renvoie un chiffre aleatoire entre 6 et 13
  */
 /* ------------------------------------------------------------------------ */
-char *cartesCouleur(int couleur)
+int random_6_13()
 {
-    switch(couleur)
+    // Permet de chager a quel moment commence l'aleatoire 
+    // donc d'avoir un tableau aleatoire qui change
+    static int first = 0;
+    if (first == 0)
     {
-        case 0 :
-            return "coeur";
-        break;
-        
-        case 1 :
-            return "carreau";
-        break;
-    
-        case 2 :
-            return "trefle";
-        break;
-
-        case 3 :
-            return "pique";
-        break;
+        srand (time(NULL));
+        first = 1;
     }
-    return "ko";
+    return rand()%(14-6)+6;// donne un chiffre aleatoire entre 6 et 13
+}
+
+
+int suite(int joueur)// si ok=0 : pas de suite, si ok=4 c'est une suite
+{
+    int tab[5];
+    int ok=0,j=0, aux=0;
+
+    //construction du tableau
+    for(int i=0;i<15;i++)
+    {
+        if(mainFinale[i][2]==joueur) 
+        {
+            tab[j]=mainFinale[i][0];
+            j++;
+        }
+    }
+
+    //TRI du tableau
+    for(int i=0;i<4;i++)
+    {
+        for(int j=4;j>i;j--)
+        {
+            if(tab[j]<tab[j-1])
+            {
+                aux=tab[j];
+                tab[j]=tab[j-1];
+                tab[j-1]=aux;
+            }
+        }
+    }
+
+    //verification que c'est une suite
+    for (int i=0; i<4; i++)
+    {
+        if(tab[i+1]==tab[i]+1)
+        {
+            ok++;
+        }
+        else
+        {
+            ok=0;
+            break;//c'est pas une suite
+        }   
+    }
+    return ok;
 }
