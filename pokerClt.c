@@ -23,6 +23,7 @@
 /* ------------------------------------------------------------------------ */
 int main(int argc,char **argv)
 {
+    printf("client lancé");
     int sock;
 	struct sockaddr_in svc;
 	char message[MAX_BUFF];

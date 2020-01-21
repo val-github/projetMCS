@@ -96,19 +96,28 @@ void dialogueClt (int sd, struct sockaddr_in clt)
  *  \fn         void dialogueSrv (int, struct sockaddr_in, char *)
  *
  *  \brief      La fonction prend en charge les communications entre les 
- *              différents clients et le serveur
+ *              différents clients, le serveur et l'hébergeur
  */
 /* ------------------------------------------------------------------------ */
 void dialogueSrv (int sd, struct sockaddr_in srv, char *message)
 {
     char reponse[MAX_BUFF];
     CHECK(read(sd, reponse, sizeof(reponse)), "Can't send");//reponse du write du client
-    if (reponse=="joueur 1; rôle d'hébergeur transmis")
+    printf(" recu => %s\n",reponse);
+    char rep1[]="joueur 1";
+    char rep2[]="joueur 2";
+    char rep3[]="joueur 3";
+    int test1=strcmp(reponse,rep1);
+    int test2=strcmp(reponse,rep2);
+    int test3=strcmp(reponse,rep3);
+    if (test1==0)
     {
+        printf("role: joueur 1 et hébergeur\n");
         gerant();
     }
-    if (reponse=="joueur 1")
+    if (test2==0)
     {
+        printf("role: joueur 2\n");
         int sock;
 	    struct sockaddr_in svc;
 	    char message[MAX_BUFF];
@@ -117,15 +126,14 @@ void dialogueSrv (int sd, struct sockaddr_in srv, char *message)
 
         while(1)
         {
-            scanf("%[^'\n']",message);
-            getchar();
             cltPartie (sock);
         }
         close(sock);
     }
 
-    if (reponse=="joueur 2")
+    if (test3==0)
     {
+        printf("role: joueur 3\n");
         int sock;
 	    struct sockaddr_in svc;
 	    char message[MAX_BUFF];
@@ -134,8 +142,6 @@ void dialogueSrv (int sd, struct sockaddr_in srv, char *message)
 
         while(1)
         {
-            scanf("%[^'\n']",message);
-            getchar();
             cltPartie (sock);
         }
         close(sock);
@@ -152,12 +158,14 @@ void dialogueSrv (int sd, struct sockaddr_in srv, char *message)
 /* ------------------------------------------------------------------------ */
 void gerant ()
 {
+        printf("fonction gerant lancée\n");
+
         int se1,se2,se3,sd1,sd2,sd3;
         struct sockaddr_in svc1,svc2,svc3,clt;
 
-        se1=createSocketListenSvc(svc1,6010,atoi(INADDR_SVC));
-        se2=createSocketListenSvc(svc2,6011,atoi(INADDR_SVC));
-        se3=createSocketListenSvc(svc3,6012,atoi(INADDR_SVC));
+        se1=createSocketListenSvc(svc1,6010,inet_addr(INADDR_SVC));
+        se2=createSocketListenSvc(svc2,6011,inet_addr(INADDR_SVC));
+        se3=createSocketListenSvc(svc3,6012,inet_addr(INADDR_SVC));
 
         pid_t pid1, pid2, pid3;
         socklen_t cltlen;
@@ -169,7 +177,7 @@ void gerant ()
                 // Attente d’un appel
                 cltlen = sizeof(clt);
                 CHECK(sd1=accept(se1, (struct sockaddr *)&clt, &cltlen) , "Can't connect");
-                
+                cltPartie(se1);
                 close(sd1);
             }
         }
@@ -182,7 +190,7 @@ void gerant ()
                 // Attente d’un appel
                 cltlen = sizeof(clt);
                 CHECK(sd2=accept(se2, (struct sockaddr *)&clt, &cltlen) , "Can't connect");
-                
+                cltPartie(se2);
                 close(sd2);
             }
         }
@@ -195,7 +203,7 @@ void gerant ()
                 // Attente d’un appel
                 cltlen = sizeof(clt);
                 CHECK(sd3=accept(se3, (struct sockaddr *)&clt, &cltlen) , "Can't connect");
-                
+                cltPartie(se3);
                 close(sd3);
             }
         }
@@ -209,8 +217,14 @@ void gerant ()
         {
             cltPartie (sock);
         }
-        
+        mainPartie();
         close(sock);
+        waitpid(pid1,NULL,0);
+        waitpid(pid2,NULL,0);
+        waitpid(pid3,NULL,0);
+        close(se1);
+        close(se2);
+        close(se3);
 }
 
 /* ------------------------------------------------------------------------ */
@@ -223,5 +237,6 @@ void gerant ()
 /* ------------------------------------------------------------------------ */
 void cltPartie(int sock)
 {
+    printf("mainPartie lancé");
     mainPartie();
 }

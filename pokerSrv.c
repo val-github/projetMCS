@@ -56,8 +56,8 @@ int main()
     }*/
 
 
-    int se1,se2,se3,se4,sd1,sd2,sd3,sd4;
-    struct sockaddr_in svc1,svc2,svc3,svc4, clt;
+    int se1,se2,se3,sd1,sd2,sd3;
+    struct sockaddr_in svc1,svc2,svc3, clt;
     socklen_t cltLen;
 
     se1=createSocketListenSvc(svc1,6000,INADDR_ANY);
@@ -71,13 +71,13 @@ int main()
     if (pid1 == 0)
     {
         while (1) 
-        { 
+        {
             // Attente d’un appel
             cltLen = sizeof(clt);
             CHECK(sd1=accept(se1, (struct sockaddr *)&clt, &cltLen) , "Can't connect");
             // attribution du role d'hébergeur de la partie
             // Envoi du message à l'hébergeur
-            char rq[]="joueur 1; rôle d'hébergeur transmis";
+            char rq[]="joueur 1";
             CHECK(write(sd1, &rq, sizeof(rq)+1), "Can't send");
             close(sd1);
         }
