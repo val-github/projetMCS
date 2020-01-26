@@ -17,7 +17,7 @@
 int nombreJoueur=3;
 int paquetMelange[32][2];
 Pile pile;
-int tailleDist=0,tailleTapis=0,tailleMain=0;
+int tailleDist=0, tailleTapis=0, tailleMain=0;
 int distribution[6][3];
 int tapis[5][2];
 int nbPoints[3];
@@ -33,10 +33,7 @@ int mainFinale[15][3];
 void mainPartie()
 {
     /* IL RESTE A FINIR
-      - tester suite sans couleur
-      - changer carte taper autre chose qu'un chiffre => erreur
-      - dire qui a gagner
-      - adresse de tableau     */
+      - dire qui a gagner    */
 
     printf("Bonjour dans cette partie de poker\n");
     creationPaquetMelange();
@@ -62,16 +59,6 @@ void mainPartie()
         demanderMainFinale(i);
         printf("\n\n\n\n\n\n\n\n\n\n");
     }
-    /*tailleMain=15;
-    int carte=0;
-
-    int mainFinale[15][3]={ {11,1,1},{8,1,1},{10,1,1},{9,2,1},{7,3,1},
-                            {10,0,2},{9,1,2},{9,2,2},{9,2,2},{9,1,2},
-                            {10,1,3},{11,0,3},{12,1,3},{13,0,3},{9,2,3}};
-    for(int i=0;i<tailleMain;i++)
-    {
-        printf("joueur %d : [%d,%s]\n",mainFinale[i][2],mainFinale[i][0],cartesCouleur(mainFinale[i][1]));
-    }*/
 
     for(int i=1;i<nombreJoueur+1;i++)
     {
@@ -89,7 +76,7 @@ void mainPartie()
 /**
  *  \fn         void affichageDistribution()
  *
- *  \brief      La fonction affiche le tableau distribution[32][3]
+ *  \brief      La fonction affiche le tableau distribution[6][3]
  */
 /* ------------------------------------------------------------------------ */
 void affichageDistribution() //affiche le tableau distribution
@@ -104,7 +91,9 @@ void affichageDistribution() //affiche le tableau distribution
 /**
  *  \fn         void affichageFenetre(int)
  *
- *  \brief      La fonction creer l'affichage cote joueur
+ *  \brief       La fonction creer l'affichage cote joueur
+ * 
+ *  \param       joueur  : Nombre representant le numéro du joueur
  */
 /* ------------------------------------------------------------------------ */
 
@@ -133,7 +122,13 @@ void affichageFenetre(int joueur) //Creer l'affichage cote joueur
     printf("\n");
 }
 
-
+/* ------------------------------------------------------------------------ */
+/**
+ *  \fn         void affichageTapis()
+ *
+ *  \brief      La fonction affiche le tableau tapis[5][2]
+ */
+/* ------------------------------------------------------------------------ */
 void affichageTapis() //affiche le tableau distribution
 {
     for(int i=0;i<5;i++)
@@ -142,6 +137,19 @@ void affichageTapis() //affiche le tableau distribution
     }
 }
 
+/* ------------------------------------------------------------------------ */
+/**
+ * \fn          int brelan(int)
+ *
+ * \brief       La fonction regarde si le joueur a un brelan dans la main qu'il a 
+ *              choisi
+ * 
+ * \param       joueur  : Nombre representant le numéro du joueur
+ * 
+ * \return      int : Renvoie 0 si il n'y a pas de brelan ou le numero du brelan 
+ *              si il existe
+ */
+/* ------------------------------------------------------------------------ */
 int brelan(int joueur)// dit si il y a un brelan dans le tableau final 0:non
 {
     int i=0;
@@ -162,10 +170,23 @@ int brelan(int joueur)// dit si il y a un brelan dans le tableau final 0:non
             }
         }
     }
-    printf("pas brelan\n");
+    //printf("pas brelan\n");
     return 0; //faux
 }
 
+/* ------------------------------------------------------------------------ */
+/**
+ * \fn          int carre(int)
+ *
+ * \brief       La fonction regarde si le joueur a un carre dans la main qu'il a 
+ *              choisi
+ * 
+ * \param       joueur  : Nombre representant le numéro du joueur
+ * 
+ * \return      int : Renvoie 0 si il n'y a pas de carre ou le numero du carre 
+ *              si il existe
+ */
+/* ------------------------------------------------------------------------ */
 int carre(int joueur)
 {
     for(int i=0+(joueur-1)*5;i<4+(joueur-1)*5;i++)
@@ -200,6 +221,12 @@ int carre(int joueur)
  *  \fn         char *cartesCouleur(int)
  *
  *  \brief      La fonction transforme un int en char (0 -> coeur)
+ * 
+ *  \param      couleur  : Nombre representant la couleur
+ * 
+ *  \return     char * : Renvoie coeur si couleur=0, carreau si couleur=1,
+ *              trefle si couleur=2, pique si couleur=3 et si couleur n'est 
+ *              aucun de tout ces chiffres on renvoie "ko"
  */
 /* ------------------------------------------------------------------------ */
 char *cartesCouleur(int couleur)//transforme un int en char
@@ -225,6 +252,18 @@ char *cartesCouleur(int couleur)//transforme un int en char
     return "ko";
 }
 
+/* ------------------------------------------------------------------------ */
+/**
+ * \fn          void changerCartes(int)
+ *
+ * \brief       La fonction demande au joueur si il veut changer des cartes de sa main
+ *              Si oui il peut changer 1 ou 2 cartes. Si il change une carte il doit donner 
+ *              son numero et sa couleur puis la fonction verifie si la carte donnée fait bien 
+ *              partie de la main du joueur
+ * 
+ * \param       joueur  : Nombre representant le numéro du joueur
+ */
+/* ------------------------------------------------------------------------ */
 void changerCartes(int joueur) //chaque joueur a la possibilite de changer ses cartes au premier tour
 {
     int numero=-1,couleur=-1,nombre=-1,ligne=-1,fini=0;
@@ -316,6 +355,19 @@ void changerCartes(int joueur) //chaque joueur a la possibilite de changer ses c
     }
 }
 
+/* ------------------------------------------------------------------------ */
+/**
+ * \fn          int couleur(int)
+ *
+ * \brief       La fonction regarde si le joueur a toutes les cartes de la meme couleur 
+ *              dans la main qu'il a choisi
+ * 
+ * \param       joueur  : Nombre representant le numéro du joueur
+ * 
+ * \return      int : Renvoie 0 si les 5 cartes ne sont pas de la meme couleur 
+ *              et 5 si les 5 cartes sont de la meme couleur 
+ */
+/* ------------------------------------------------------------------------ */
 int couleur(int joueur)//si ok=0 les 5 cartes ne sont pas de la meme couleur, si ok=5 les 5 cartes sont de la meme couleur
 {
     int couleur=-1,ok=0;
@@ -343,6 +395,19 @@ int couleur(int joueur)//si ok=0 les 5 cartes ne sont pas de la meme couleur, si
     return ok;
 }
 
+/* ------------------------------------------------------------------------ */
+/**
+ * \fn          int couleurCartes(char *)
+ *
+ * \brief       La fonction transforme un char en int (coeur -> 0)
+ * 
+ * \param       cCouleur  : chaine de caractere representant la couleur
+ * 
+ * \return      int : Renvoie 0 si cCouleur="coeur", 1 si cCouleur="carreau",
+ *              2 si cCouleur="trefle", 3 si couleur="pique" et si cCouleur n'est 
+ *              aucune de toutes ces chaine de caracteres on renvoie -1
+ */
+/* ------------------------------------------------------------------------ */
 int couleurCartes(char *cCouleur)//transforme un char en int
 {
     int couleur=-1;
@@ -370,7 +435,7 @@ int couleurCartes(char *cCouleur)//transforme un char en int
 /**
  *  \fn         void creationListeCartes()
  *
- *  \brief      La fonction crée unepile a partir du tableau paquetMelange. 
+ *  \brief      La fonction crée une pile a partir du tableau paquetMelange. 
  *              L'élément de la pile est un tableau. 
  *              La première colonne est la carte et la deuxième est la couleur
  */
@@ -391,6 +456,25 @@ void creationListeCartes()
     //afficher(pile);
 }
 
+/* ------------------------------------------------------------------------ */
+/**
+ * \fn          void creationNbPoints(int)
+ *
+ * \brief       La fonction creer le tableau nbPoints[3] à partir du tableau mainFinale[15][3] 
+ *              en regardant pour chaque joueur si il a une suite, une couleur, un brelan, un full, une paire, un carre,...
+ *              Puis on rempli nbPoints[numero du joueur] en fonction de ce qu'il a :
+ *               - paire = 1*(numero de la paire)
+ *               - double paire = 2*(numero de la paire la plus grande)
+ *               - brelan = 3*(numero du brelan)
+ *               - suite = 37
+ *               - couleur = 38
+ *               - full = 7*(numero du brelan)
+ *               - carre = 8*(numero du carre)     
+ *               - suite couleur = 210              
+ * 
+ * \param       joueur  : Nombre representant le numéro du joueur
+ */
+/* ------------------------------------------------------------------------ */
 void creationNbPoints(int joueur)
 {
     //printf("joueur = %d\n",joueur);
@@ -399,7 +483,7 @@ void creationNbPoints(int joueur)
     if(couleur(joueur)==5)
     {
         //printf("joueur %d : couleur",joueur);
-        nbPoints[joueur]=15;
+        nbPoints[joueur]=38;
         if(suite(joueur)==4)//c'est une suite
         {
             //printf("joueur %d : suite",joueur);
@@ -411,7 +495,7 @@ void creationNbPoints(int joueur)
         if(suite(joueur)==4)//c'est une suite
         {
             //printf("joueur %d : suite",joueur);
-            nbPoints[joueur]=210;
+            nbPoints[joueur]=37;
         }
         carte=carre(joueur);
         if(carte==0)//pas de carre
@@ -464,14 +548,14 @@ void creationNbPoints(int joueur)
                 else //il y a un full
                 {
                     //printf("joueur %d : il y a un full de %d et %d\n",joueur,carteBrelan,carte);
-                    nbPoints[joueur]=6*carteBrelan;
+                    nbPoints[joueur]=7*carteBrelan;
                 }
             }
         }
         else//il y a un carre
         {
             //printf("joeur %d : il y a un carre de %d\n",joueur,carte);
-            nbPoints[joueur]=7*carte;
+            nbPoints[joueur]=8*carte;
         }
     }
 }
@@ -502,6 +586,16 @@ void creationPaquetMelange()
     }
 }
 
+/* ------------------------------------------------------------------------ */
+/**
+ * \fn          void demanderMainFinale(int)
+ *
+ * \brief       La fonction cree le tableau mainFinale[15][3] en demandant au 
+ *              joueur quels carte de la table il veux ajouter a sa main
+ *              
+ * \param       joueur  : Nombre representant le numéro du joueur
+ */
+/* ------------------------------------------------------------------------ */
 void demanderMainFinale(int joueur)//creer la mainFinal
 {
     int numero=-1,couleur=-1,ligne=-1,fini=1,ok=1;
@@ -631,7 +725,16 @@ void distribuer2Cartes() //on distribu 2 cartes aux joueurs
     }
 }
 
-void distribuerTapis(int nbCartes) //on distribuer nbCartes sur la zoner centrale
+/* ------------------------------------------------------------------------ */
+/**
+ * \fn          void distribuerTapis(int)
+ *
+ * \brief       La fonction distribue nbCartes sur le tapis et rempli le tableau tapis[5][2]
+ * 
+ * \param       nbCartes : Nombre de carte a mettre sur le tapis (2 au premier tour et 3 au deuxieme tour)
+ */
+/* ------------------------------------------------------------------------ */
+void distribuerTapis(int nbCartes) //on distribuer nbCartes sur la zone centrale
 {
     int tab[2];
 
@@ -652,6 +755,21 @@ void distribuerTapis(int nbCartes) //on distribuer nbCartes sur la zoner central
     }
 }
 
+/* ------------------------------------------------------------------------ */
+/**
+ * \fn          int emplacementCarte(int tab[6][3],int *, int , int , int)
+ *
+ * \brief       La fonction trouve l'emplacement de la carte donnée en parametre si elle existe
+ * 
+ * \param       tab[6][3]  : Tableau ou est mis la distribution des cartes
+ * \param       ligne  : Nombre representant le numéro de la ligne ou se situe la carte
+ * \param       carte  : Nombre representant le numero de la carte
+ * \param       couleur  : Nombre representant la couleur de la carte
+ * \param       joueur  : Nombre representant le numéro du joueur  
+ * 
+ * \return      int : Renvoie 0 si la carte n'existe pas ou 1 si elle existe
+ */
+/* ------------------------------------------------------------------------ */
 int emplacementCarte(int tab[6][3],int *ligne, int carte, int couleur, int joueur) // trouve l'emplacement de la carte si elle existe
 {
     for (int i=0;i<6;i++)
@@ -671,6 +789,25 @@ int emplacementCarte(int tab[6][3],int *ligne, int carte, int couleur, int joueu
     return 0; //la carte n'existe pas
 }
 
+/* ------------------------------------------------------------------------ */
+/**
+ * \fn          int existeTapis(int, int, int, int, int)
+ *
+ * \brief       La fonction si la carte existe sur le tapis ou pas.
+ *              La fonction est appellée plusieurs fois pour pouvoir verifier 
+ *              d'abord si le numero exite, 
+ *              puis si la couleur exite, si oui on verifie que l'association des deux existe sur le tapis.
+ *              A partir de la deuxieme carte choisie il faut verifie si le joueur n'a pas deja choisi cette carte
+ * 
+ * \param       nombre  : Nombre representant le numero de la carte
+ * \param       couleur  : Nombre representant la couleur de la carte
+ * \param       joueur  : Nombre representant le numéro du joueur
+ * \param       cas  : si 1 alors on verifi le nombre, si 2 alors on verifi la couleur et si la carte existe
+ * \param       tour : 1 on a pas besoin de verifie si la carte a deja ete choisi, sinon on verifi dans le tableau mainFinale[15][3]
+ * 
+ * \return      int : Renvoie 0 si la carte n'existe pas ou 1 si la carte existe sur le tapis ou 2 si carte a deja ete choisi
+ */
+/* ------------------------------------------------------------------------ */
 int existeTapis(int nombre, int couleur, int joueur, int cas, int tour)//verifie si la carte existe sur le tapis et si on ne l'a deja ajouter dans MainFinal
 {
     if(tour==1)
@@ -741,7 +878,21 @@ int existeTapis(int nombre, int couleur, int joueur, int cas, int tour)//verifie
     return 0; //la carte n'existe pas
 }
 
-int paire(int joueur,int carte)// dit si il y a une paire dans le tableau final 0:non
+/* ------------------------------------------------------------------------ */
+/**
+ * \fn          int paire(int, int)
+ *
+ * \brief       La fonction regarde si le joueur a une paire dans la main qu'il a 
+ *              choisi
+ * 
+ * \param       joueur  : Nombre representant le numéro du joueur
+ * \param       carte  : Nombre a verifie pour ne pas faire une paire de ce numero
+ * 
+ * \return      int : Renvoie 0 si il n'y a pas de paire ou le numero de la paire 
+ *              si elle existe
+ */
+/* ------------------------------------------------------------------------ */
+int paire(int joueur, int carte)// dit si il y a une paire dans le tableau final 0:non
 {
     int i=0;
     if(carte==0)
@@ -780,13 +931,22 @@ int paire(int joueur,int carte)// dit si il y a une paire dans le tableau final 
     //printf("pas paire\n");
     return 0; //faux
 }
+
 /* ------------------------------------------------------------------------ */
 /**
  *  \fn         int verifierCarte(int tab[32][2],int , int , int )
  *
- *  \brief      La fonction vérifie si la combinaison carte couleur existe deja dans le  tableau.
- *              Elle renvoie 1 si la carte exite et 0 si elle n'existe pas
+ *  \brief      La fonction vérifie si la combinaison carte couleur existe deja dans le tableau.
+ *
+ * \param       tab[32][2] : Tableau de carte
+ * \param       ligne : Nombre representant la derniere ligne du tableau
+ * \param       carte : Nombre representant le numéro de la carte
+ * \param       couleur : Nombre representant la couleur de la carte
+ * 
+ * \return      int : Renvoie 1 si la carte exite ou 0 si elle n'existe pas
  */
+/* ------------------------------------------------------------------------ */
+
 /* ------------------------------------------------------------------------ */
 int verifierCarte(int tab[32][2],int ligne, int carte, int couleur)
 {
@@ -839,6 +999,18 @@ int random_6_13()
 }
 
 
+/* ------------------------------------------------------------------------ */
+/**
+ * \fn          int suite(int)
+ *
+ * \brief       La fonction regarde si le joueur a une suite dans la main qu'il a 
+ *              choisi
+ * 
+ * \param       joueur  : Nombre representant le numéro du joueur
+ * 
+ * \return      int : Renvoie 0 si il n'y a pas de suite ou 4 si la suite existe
+ */
+/* ------------------------------------------------------------------------ */
 int suite(int joueur)// si ok=0 : pas de suite, si ok=4 c'est une suite
 {
     int tab[5];
