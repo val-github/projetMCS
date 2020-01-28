@@ -30,7 +30,7 @@ int mainFinale[15][3];
  *  \brief      Fonction main du fichier
  */
 /* ------------------------------------------------------------------------ */
-void mainPartie()
+void mainPartie(int clt1,int clt2)
 {
     /* IL RESTE A FINIR
       - tester suite sans couleur
@@ -46,22 +46,46 @@ void mainPartie()
     distribuer2Cartes();
     distribuerTapis(2);
     printf("\n\n\n");
-    for(int i=1;i<nombreJoueur+1;i++)
+    
+    /*for(int i=1;i<nombreJoueur+1;i++)
     {
-        affichageFenetre(i);
         changerCartes(i);
         printf("\n\n\n\n\n\n\n\n\n\n");
-    }
+    }*/
+    
+    
+    affichageFenetre(clt1,1);
+    changerCartes(clt1,1);
+    affichageFenetre(clt1,1);
+    printf("\n\n\n\n\n\n\n\n\n\n");
+
+    //test affichageFenetreClt
+    affichageFenetre(clt1,2);
+    changerCartes(clt1,2);
+    affichageFenetre(clt1,2);
+    
+    printf("YES!!!");
+    affichageFenetre(clt2,3);
+    changerCartes(clt2,3);
+    affichageFenetre(clt2,0);
+    /*
     
     printf("2eme tour\n");
+    CHECK(write(clt1, "2eme tour\n", strlen("2eme tour\n") + 1), "Can't send");
+    CHECK(write(clt2, "2eme tour\n", strlen("2eme tour\n") + 1), "Can't send");
     distribuerTapis(3);
-    for(int i=1;i<nombreJoueur+1;i++)
-    {
-        printf("\n\n");
-        affichageFenetre(i);
-        demanderMainFinale(i);
-        printf("\n\n\n\n\n\n\n\n\n\n");
-    }
+    
+    //affichageFenetre(clt1,1);
+    //demanderMainFinale(clt1);
+
+    //affichageFenetre(clt1,2);
+    //demanderMainFinale(i);
+
+    //affichageFenetre(clt2,3);
+    //demanderMainFinale(i);
+    */
+   
+
     /*tailleMain=15;
     int carte=0;
 
@@ -80,8 +104,86 @@ void mainPartie()
 
     for(int i=1;i<nombreJoueur+1;i++)
     {
+        char reponse=nbPoints[i];
+        char reponse1=i;
+
+        char rep[MAX_BUFF];
+        char rep1[MAX_BUFF];
+        char ack[MAX_BUFF];
+
+        sprintf(rep,"%d",reponse);
+        sprintf(rep1,"%d",reponse1);
+
+        
+
+        CHECK(write(clt1, "joueur ", strlen("joueur ") + 1), "Can't send");
+        read(clt1,ack,sizeof(ack));
+        while(strcmp(ack,ACK)!=0){ //attente d'ack (ACK) du client
+                read(clt1,ack,sizeof(ack));
+                sleep(1);
+        }
+        CHECK(write(clt1, rep1, strlen(rep1) + 1), "Can't send");
+        read(clt1,ack,sizeof(ack));
+        while(strcmp(ack,ACK)!=0){ //attente d'ack (ACK) du client
+                read(clt1,ack,sizeof(ack));
+                sleep(1);
+        }
+        CHECK(write(clt1, ": ", strlen(": ") + 1), "Can't send");
+        read(clt1,ack,sizeof(ack));
+        while(strcmp(ack,ACK)!=0){ //attente d'ack (ACK) du client
+                read(clt1,ack,sizeof(ack));
+                sleep(1);
+        }
+        CHECK(write(clt1, rep, strlen(rep) + 1), "Can't send");
+        read(clt1,ack,sizeof(ack));
+        while(strcmp(ack,ACK)!=0){ //attente d'ack (ACK) du client
+                read(clt1,ack,sizeof(ack));
+                sleep(1);
+        }
+        CHECK(write(clt1, "\n", strlen("\n") + 1), "Can't send");
+        read(clt1,ack,sizeof(ack));
+        while(strcmp(ack,ACK)!=0){ //attente d'ack (ACK) du client
+                read(clt1,ack,sizeof(ack));
+                sleep(1);
+        }
+
+        CHECK(write(clt2, "joueur ", strlen("joueur ") + 1), "Can't send");
+        read(clt2,ack,sizeof(ack));
+        while(strcmp(ack,ACK)!=0){ //attente d'ack (ACK) du client
+                read(clt2,ack,sizeof(ack));
+                sleep(1);
+        }
+        CHECK(write(clt2, rep1, strlen(rep1) + 1), "Can't send");
+        read(clt2,ack,sizeof(ack));
+        while(strcmp(ack,ACK)!=0){ //attente d'ack (ACK) du client
+                read(clt2,ack,sizeof(ack));
+                sleep(1);
+        }
+        CHECK(write(clt2, ":\t", strlen("\n") + 1), "Can't send");
+        read(clt2,ack,sizeof(ack));
+        while(strcmp(ack,ACK)!=0){ //attente d'ack (ACK) du client
+                read(clt2,ack,sizeof(ack));
+                sleep(1);
+        }
+        CHECK(write(clt2, rep, strlen(rep) + 1), "Can't send");
+        read(clt2,ack,sizeof(ack));
+        while(strcmp(ack,ACK)!=0){ //attente d'ack (ACK) du client
+                read(clt2,ack,sizeof(ack));
+                sleep(1);
+        }
+        CHECK(write(clt2, "\n", strlen("\n") + 1), "Can't send");
+        read(clt2,ack,sizeof(ack));
+        while(strcmp(ack,ACK)!=0){ //attente d'ack (ACK) du client
+                read(clt2,ack,sizeof(ack));
+                sleep(1);
+        }
+
         printf("joueur %d : %d\n",i,nbPoints[i]);
     }
+    
+    CHECK(write(clt1, FIN, strlen(FIN) + 1), "Can't send");
+    CHECK(write(clt2, FIN, strlen(FIN) + 1), "Can't send");
+    
 }
 
 
@@ -108,28 +210,106 @@ void affichageDistribution() //affiche le tableau distribution
  */
 /* ------------------------------------------------------------------------ */
 
-void affichageFenetre(int joueur) //Creer l'affichage cote joueur
+void affichageFenetre(int sd,int nb) //Creer l'affichage cote joueur
 {
-    printf("\nJoueur %d\n\n\n",joueur);
+    //printf("\tCartes communes\n");
+    //printf("\nJoueur %d\n\n\n",joueur);
+    char ack[MAX_BUFF];
 
-    printf("\tCartes communes\n");
-    for(int i=0;i<5;i++)
+    if (nb==1)
     {
-        if(tapis[i][0]!=0)
+        printf("Cartes commune\n");
+        for(int i=0;i<5;i++)
         {
-            printf("\t[%d,%s]",tapis[i][0],cartesCouleur(tapis[i][1]));
+            if(tapis[i][0]!=0)
+            {
+                printf("\t[%d,%s]\n",tapis[i][0],cartesCouleur(tapis[i][1]));
+            }
         }
-    }
-    printf("\n\n\n\n");
+        printf("Mes cartes\n");
+        for(int i=0;i<6;i++)
+        {
+        printf("[%d,%s]\t",distribution[i][0],cartesCouleur(distribution[i][1]));
+        }
+    }else{
+        printf("\n\n\n\n");
+        char rep[]="\tCartes communes\n";
+        CHECK(write(sd, rep, strlen(rep) + 1), "Can't send");
 
-    printf("Mes cartes\n");
-    for(int i=0;i<6;i++)
-    {
-        if(distribution[i][2]==joueur)
+        for(int i=0;i<5;i++)
         {
-            printf("[%d,%s]\t",distribution[i][0],cartesCouleur(distribution[i][1]));
+            if(tapis[i][0]!=0)
+            {
+                char reponse=tapis[i][0];
+                char rep[MAX_BUFF];
+                sprintf(rep,"%d",reponse);
+                char reponse1[MAX_BUFF];
+                strcpy(reponse1,cartesCouleur(tapis[i][1]));
+                CHECK(write(sd, rep, MAX_BUFF), "Can't send");
+                read(sd,ack,sizeof(ack));
+                while(strcmp(ack,ACK)!=0){ //attente d'ack (ACK) du client
+                read(sd,ack,sizeof(ack));
+                sleep(1);
+                }
+                CHECK(write(sd, "\t", strlen("\t") + 1), "Can't send");
+                read(sd,ack,sizeof(ack));
+                while(strcmp(ack,ACK)!=0){ //attente d'ack (ACK) du client
+                read(sd,ack,sizeof(ack));
+                sleep(1);
+                }
+                CHECK(write(sd, reponse1, strlen(reponse1) + 1), "Can't send");
+                read(sd,ack,sizeof(ack));
+                while(strcmp(ack,ACK)!=0){ //attente d'ack (ACK) du client
+                read(sd,ack,sizeof(ack));
+                sleep(1);
+                }
+                CHECK(write(sd, "\n", strlen("\n") + 1), "Can't send");
+                read(sd,ack,sizeof(ack));
+                while(strcmp(ack,ACK)!=0){ //attente d'ack (ACK) du client
+                read(sd,ack,sizeof(ack));
+                sleep(1);
+                }
+                //printf("\t[%d,%s]",tapis[i][0],cartesCouleur(tapis[i][1]));
+            }
         }
+        printf("\n\n\n\n");
+
+        char reponse2[]="\tMes cartes\n";
+        CHECK(write(sd, reponse2, strlen(MSG) + 1), "Can't send");
+
+        for(int i=0;i<6;i++)
+        {
+            if(distribution[i][2]==nb)
+            {
+                char reponse1[MAX_BUFF];
+                char reponse=distribution[i][0];
+                char rep[MAX_BUFF];
+                sprintf(rep,"%d",reponse);
+                strcpy(reponse1,cartesCouleur(distribution[i][1]));
+                CHECK(write(sd, rep, MAX_BUFF), "Can't send");
+                read(sd,ack,sizeof(ack));
+                while(strcmp(ack,ACK)!=0){ //attente d'ack (ACK) du client
+                read(sd,ack,sizeof(ack));
+                sleep(1);
+                }
+                CHECK(write(sd, reponse1, strlen(reponse1) + 1), "Can't send");
+                read(sd,ack,sizeof(ack));
+                while(strcmp(ack,ACK)!=0){ //attente d'ack (ACK) du client
+                read(sd,ack,sizeof(ack));
+                sleep(1);
+                }
+                CHECK(write(sd, "\n", strlen("\n") + 1), "Can't send");
+                read(sd,ack,sizeof(ack));
+                while(strcmp(ack,ACK)!=0){ //attente d'ack (ACK) du client
+                read(sd,ack,sizeof(ack));
+                sleep(1);
+                }
+                //printf("[%d,%s]\t",distribution[i][0],cartesCouleur(distribution[i][1]));
+            }
+        } 
     }
+    
+    
     printf("\n");
 }
 
@@ -225,56 +405,74 @@ char *cartesCouleur(int couleur)//transforme un int en char
     return "ko";
 }
 
-void changerCartes(int joueur) //chaque joueur a la possibilite de changer ses cartes au premier tour
+void changerCartes(int sd,int nb) //chaque joueur a la possibilite de changer ses cartes au premier tour
 {
-    int numero=-1,couleur=-1,nombre=-1,ligne=-1,fini=0;
+    int numero=-1,coul=-1,nombre=-1,ligne=-1,fini=0;
     char cCouleur[10];
     int tab[2];
-
-    //printf("Joueur %d\n",joueur);
-    do
-    {
-        printf("Combien de cartes veux tu changer ? ");
-        scanf("%d",&nombre);
-        if(nombre>2 || nombre<0)
-        {
-            printf("Tu peux changer 2 cartes maximum.\n");
-        }
-    } while (nombre>2 || nombre<0);
-
-    if(nombre==1) //Le joueur veux changer une carte
+    if (nb==1)//joueur 1
     {
         do
         {
-            printf("Quelle carte veux tu changer ?\n");
-            do
+            printf("Combien de cartes veux tu changer ? ");
+            scanf("%d",&nombre);
+            if(nombre>2 || nombre<0)
             {
-                printf("Veuillez taper le numero de votre carte (entre 6 et 13) : ");
-                scanf("%d",&numero);
-                if(numero<6 || numero>13)
-                {
-                    printf("Tu n'as pas repondu correctement ! Ce chiffre n'est pas compris entre 6 et 13 !\n\n");
-                }
-            } while (6>numero || numero>14);
-            
-            do
-            {
-                printf("Veuillez taper la couleur de votre carte (coeur, carreau, trefle et pique) : ");
-                scanf("%s",cCouleur);
-                
-                couleur=couleurCartes(cCouleur);
-                if(couleur<0 || couleur>3)
-                {
-                    printf("Tu n'as pas repondu correctement ! Cette couleur n'existe pas !\n\n");
-                }
-            } while (couleur==-1);
-            
-            if(emplacementCarte(distribution,&ligne,numero,couleur,joueur)==0) // la carte n'existe pas
-            {
-                printf("Cette carte n'est pas en votre possession. Donc vous ne pouvez pas echanger cette carte.\n\n");
-                fini=0;
+                printf("Tu peux changer 2 cartes maximum.\n");
             }
-            else
+        } while (nombre>2 || nombre<0);
+
+        if(nombre==1) //Le joueur veux changer une carte
+        {
+            do
+            {
+                printf("Quelle carte veux tu changer ?\n");
+                do
+                {
+                    printf("Veuillez taper le numero de votre carte (entre 6 et 13) : ");
+                    scanf("%d",&numero);
+                    if(numero<6 || numero>13)
+                    {
+                        printf("Tu n'as pas repondu correctement ! Ce chiffre n'est pas compris entre 6 et 13 !\n\n");
+                    }
+                } while (6>numero || numero>14);
+                
+                do
+                {
+                    printf("Veuillez taper la couleur de votre carte (coeur, carreau, trefle et pique) : ");
+                    scanf("%s",cCouleur);
+                    
+                    coul=couleurCartes(cCouleur);
+                    if(coul<0 || coul>3)
+                    {
+                        printf("Tu n'as pas repondu correctement ! Cette couleur n'existe pas !\n\n");
+                    }
+                } while (coul==-1);
+                
+                if(emplacementCarte(distribution,&ligne,numero,coul,nb)==0) // la carte n'existe pas
+                {
+                    printf("Cette carte n'est pas en votre possession. Donc vous ne pouvez pas echanger cette carte.\n\n");
+                    fini=0;
+                }
+                else
+                {
+                    pile=depiler(pile,tab);
+                    if(tab[0] == -1)
+                    {
+                        printf("Pile vide");
+                    }
+                    else
+                    {
+                        distribution[ligne][0] = tab[0];
+                        distribution[ligne][1] = tab[1];
+                        fini=1;
+                    }
+                }
+            } while (fini!=1);
+        }
+        else if(nombre==2)//Le joueur veux echanger ses deux cartes 
+        {
+            for (int i=0; i<2; i++)//distribuer au joueur 2 cartes
             {
                 pile=depiler(pile,tab);
                 if(tab[0] == -1)
@@ -283,32 +481,158 @@ void changerCartes(int joueur) //chaque joueur a la possibilite de changer ses c
                 }
                 else
                 {
-                    distribution[ligne][0] = tab[0];
-                    distribution[ligne][1] = tab[1];
-                    fini=1;
+                    //printf("%d, %d\n",tab[0],tab[1]);
+                    for(int j=0;j<6;j++)//on cherche les lignes du tableau qui appatiennent au joueur
+                    {
+                        if(distribution[j][2] == nb)
+                        {
+                            distribution[j+i][0] = tab[0];
+                            distribution[j+i][1] = tab[1];
+                            break;
+                        }
+                    }
                 }
             }
-        } while (fini!=1);
-    }
-    else if(nombre==2)//Le joueur veux echanger ses deux cartes 
+        }
+    }else//joueur 2 ou joueur 3
     {
-        for (int i=0; i<2; i++)//distribuer au joueur 2 cartes
+        char ack[MAX_BUFF];
+        CHECK(write(sd,DEM,strlen(DEM)),"can't send");
+        read(sd,ack,sizeof(ack));
+        while(strcmp(ack,ACK)!=0){ //attente d'ack (ACK) du client
+        read(sd,ack,sizeof(ack));
+        sleep(1);
+        }
+        do
         {
-            pile=depiler(pile,tab);
-            if(tab[0] == -1)
+            int nbre[MAX_BUFF];
+            read(sd,nbre, sizeof(nbre));
+            if (nbre!=NULL);
             {
-                printf("Pile vide");
+                CHECK(write(sd,ACK,sizeof(ACK)),"can't send");
             }
-            else
+            read(sd,ack,sizeof(ack));
+            while(strcmp(ack,ACK)!=0){ //attente d'ack (ACK) du client
+            read(sd,ack,sizeof(ack));
+            sleep(1);
+            }
+
+            int nombre=*nbre;
+            
+            if(nombre>2 || nombre<0)
             {
-                //printf("%d, %d\n",tab[0],tab[1]);
-                for(int j=0;j<6;j++)//on cherche les lignes du tableau qui appatiennent au joueur
+                char *rep="Tu peux changer 2 cartes maximum.\n";
+                CHECK(write(sd,rep,strlen(rep)+1),"can't send");
+                while(strcmp(ack,ACK)!=0){ //attente d'ack (ACK) du client
+                read(sd,ack,sizeof(ack));
+                sleep(1);
+                }
+            }
+        } while (nombre>2 || nombre<0);
+        CHECK(write(sd,DEM,strlen(DEM)),"can't send");
+        while(strcmp(ack,ACK)!=0){ //attente d'ack (ACK) du client
+        read(sd,ack,sizeof(ack));
+        sleep(1);
+        }
+
+        if(nombre==1) //Le joueur veut changer une carte
+        {
+            do
+            {
+                CHECK(write(sd,DEM,strlen(DEM)),"can't send");
+                do
                 {
-                    if(distribution[j][2] == joueur)
+                    int val[MAX_BUFF];
+                    read(sd, val, sizeof(val));
+                    int numero=*val;
+
+                    if(numero<6 || numero>13)
                     {
-                        distribution[j+i][0] = tab[0];
-                        distribution[j+i][1] = tab[1];
-                        break;
+                        char mes1[]="Tu n'as pas repondu correctement ! Ce chiffre n'est pas compris entre 6 et 13 !\n\n";
+                        CHECK(write(sd,mes1,strlen(mes1)),"can't send");
+                        while(strcmp(ack,ACK)!=0){ //attente d'ack (ACK) du client
+                        read(sd,ack,sizeof(ack));
+                        sleep(1);
+                        }
+                    }
+                } while (6>numero || numero>14);
+
+                CHECK(write(sd,DEM,strlen(DEM)),"can't send");
+                
+                do
+                {
+                    read(sd, cCouleur, sizeof(cCouleur));
+                    coul=couleurCartes(cCouleur);
+
+                    if(coul<0 || coul>3)
+                    {
+                        char mes2[]="Tu n'as pas repondu correctement ! Cette couleur n'existe pas !\n\n";
+                        CHECK(write(sd,mes2,strlen(mes2)),"can't send");
+                        while(strcmp(ack,ACK)!=0){ //attente d'ack (ACK) du client
+                        read(sd,ack,sizeof(ack));
+                        sleep(1);
+                        }
+                    }
+                } while (coul==-1);
+                CHECK(write(sd,DEM,strlen(DEM)),"can't send");
+                while(strcmp(ack,ACK)!=0){ //attente d'ack (ACK) du client
+                read(sd,ack,sizeof(ack));
+                sleep(1);
+                }
+
+                if(emplacementCarte(distribution,&ligne,numero,coul,nb)==0) // la carte n'existe pas
+                {
+                    char mes3[]="Cette carte n'est pas en votre possession. Donc vous ne pouvez pas echanger cette carte.\n\n";
+                    CHECK(write(sd,mes3,strlen(mes3)),"can't send");
+                    while(strcmp(ack,ACK)!=0){ //attente d'ack (ACK) du client
+                    read(sd,ack,sizeof(ack));
+                    sleep(1);
+                    }
+                    CHECK(write(sd,DEM,strlen(DEM)),"can't send");
+                    fini=0;
+                }
+
+                else
+                {
+                    pile=depiler(pile,tab);
+                    if(tab[0] == -1)
+                    {
+                        printf("Pile vide");
+                        CHECK(write(sd,"Pile vide",strlen("Pile vide")),"can't send");
+                        while(strcmp(ack,ACK)!=0){ //attente d'ack (ACK) du client
+                        read(sd,ack,sizeof(ack));
+                        sleep(1);
+                        }
+                    }
+                    else
+                    {
+                        distribution[ligne][0] = tab[0];
+                        distribution[ligne][1] = tab[1];
+                        fini=1;
+                    }
+                }
+            } while (fini!=1);
+        }
+        else if(nombre==2)//Le joueur veux echanger ses deux cartes 
+        {
+            for (int i=0; i<2; i++)//distribuer au joueur 2 cartes
+            {
+                pile=depiler(pile,tab);
+                if(tab[0] == -1)
+                {
+                    printf("Pile vide");
+                }
+                else
+                {
+                    //printf("%d, %d\n",tab[0],tab[1]);
+                    for(int j=0;j<6;j++)//on cherche les lignes du tableau qui appatiennent au joueur
+                    {
+                        if(distribution[j][2] == nb)
+                        {
+                            distribution[j+i][0] = tab[0];
+                            distribution[j+i][1] = tab[1];
+                            break;
+                        }
                     }
                 }
             }
@@ -502,7 +826,7 @@ void creationPaquetMelange()
     }
 }
 
-void demanderMainFinale(int joueur)//creer la mainFinal
+void demanderMainFinale(int sd,int nb)//creer la mainFinal
 {
     int numero=-1,couleur=-1,ligne=-1,fini=1,ok=1;
     char cCouleur[10];
@@ -510,11 +834,11 @@ void demanderMainFinale(int joueur)//creer la mainFinal
 
     for(int i=0;i<6;i++)
     {
-        if(distribution[i][2]==joueur)
+        if(distribution[i][2]==nb)
         {
             mainFinale[tailleMain][0]=distribution[i][0];
             mainFinale[tailleMain][1]=distribution[i][1];
-            mainFinale[tailleMain][2]=joueur;
+            mainFinale[tailleMain][2]=nb;
             tailleMain++;
         }
     }
@@ -529,9 +853,11 @@ void demanderMainFinale(int joueur)//creer la mainFinal
         {       
             do
             {
-                printf("Veuillez taper le chiffre d'une des carte de la table : ");
+                char message[]="Veuillez taper le chiffre d'une des carte de la table : ";
+                CHECK(read(sd,message,sizeof(message)),"can't send");
+                CHECK(read(sd,numero,sizeof(numero)),"can't send");
                 scanf("%d",&numero);
-                if(existeTapis(numero,-1,joueur,1,fini)==0)
+                if(existeTapis(numero,-1,nb,1,fini)==0)
                 {
                     printf("Tu n'as pas repondu correctement ! La table n'a pas une carte de ce chiffre !\n\n");
                     ok=0;
@@ -567,12 +893,12 @@ void demanderMainFinale(int joueur)//creer la mainFinal
                     } while (ok!=1);
                 }
 
-                if(existeTapis(numero,couleur,joueur,2,fini)==0)
+                if(existeTapis(numero,couleur,nb,2,fini)==0)
                 {
                     printf("Cette carte n'existe pas sur le tapis\n\n");
                     ok=0;
                 }
-                else if(existeTapis(numero,couleur,joueur,2,fini)==2)
+                else if(existeTapis(numero,couleur,nb,2,fini)==2)
                 {
                     printf("Vous avez deja choisi cette carte !\n");
                     printf("Veuillez en choisir une autre.\n");
@@ -582,7 +908,7 @@ void demanderMainFinale(int joueur)//creer la mainFinal
                 {
                     mainFinale[tailleMain][0]=numero;
                     mainFinale[tailleMain][1]=couleur;
-                    mainFinale[tailleMain][2]=joueur;
+                    mainFinale[tailleMain][2]=nb;
                     tailleMain++;
                     ok=1;
                 }
@@ -602,10 +928,10 @@ void demanderMainFinale(int joueur)//creer la mainFinal
  *              au premier joueur puis fais la meme chose pour les autres joueurs.
  *              Les cartes distribuées sont enregistrée par le serveur dans un tableau distribution.
  *              En premiere colonne le numero de la carte, en deuxieme colonne sa couleur et en troisieme 
- *              colonne le numéro du joueur à qui elle a etait donnée.
+ *              colonne le numéro du joueur à qui elle a été donnée.
  */
 /* ------------------------------------------------------------------------ */
-void distribuer2Cartes() //on distribu 2 cartes aux joueurs
+void distribuer2Cartes() //on distribue 2 cartes aux joueurs
 {
     int tab[2];
 
@@ -631,7 +957,7 @@ void distribuer2Cartes() //on distribu 2 cartes aux joueurs
     }
 }
 
-void distribuerTapis(int nbCartes) //on distribuer nbCartes sur la zoner centrale
+void distribuerTapis(int nbCartes) //on distribuer nbCartes sur la zone centrale
 {
     int tab[2];
 
@@ -727,7 +1053,7 @@ int existeTapis(int nombre, int couleur, int joueur, int cas, int tour)//verifie
                                 {
                                     if(mainFinale[j][0] == nombre)
                                     {
-                                        return 2; //la carte a deja etait selectionne
+                                        return 2; //la carte a deja été selectionnée
                                     }
                                 }
                             }

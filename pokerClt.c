@@ -26,17 +26,7 @@ int main(int argc,char **argv)
     printf("client lancé");
     int sock;
 	struct sockaddr_in svc;
-	char message[MAX_BUFF];
-
-
-	sock=createSocketListenClt(svc,atoi(argv[2]),inet_addr(argv[1]));
-
-    while(1)
-    {
-        scanf("%[^'\n']",message);
-        getchar();
-        dialogueSrv (sock, svc, message);
-    }
+    sock=createSocketListenClt(svc,atoi(argv[2]),inet_addr(argv[1]));
+    dialogueSrv(sock);
     close(sock);
-    return 0;
 }

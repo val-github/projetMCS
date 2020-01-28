@@ -23,102 +23,82 @@
 /* ------------------------------------------------------------------------ */
 int main()
 { 
-    /*printf("nombre de joueurs?:");
-    int nj = getchar();
+    int se,sd1,sd2,sd3;
+    struct sockaddr_in svc, clt1, clt2, clt3;
+    pid_t pid;
 
-    for (int i=0; i<nj; i++)
-    {
-        int se,sd,port;
-        struct sockaddr_in svc,clt;
-        socklen_t cltLen;
-        port=6000+i;
-        se=createSocketListenSvc(svc,port,INADDR_ANY);
-
-        // Boucle permanente de service 
-
-        pid_t pid;
-        pid = fork();
-        if (pid == 0)
-        {
-            while (1) 
-            { 
-                // Attente d’un appel
-                cltLen = sizeof(clt);
-                CHECK(sd=accept(se, (struct sockaddr *)&clt, &cltLen) , "Can't connect");
-                // Dialogue avec le client
-                dialogueClt (sd , clt);
-                close(sd);
-                
-            }
-        }
-        waitpid(pid,NULL,0);
-        close(se);
-    }*/
-
-
-    int se1,se2,se3,sd1,sd2,sd3;
-    struct sockaddr_in svc1,svc2,svc3, clt;
-    socklen_t cltLen;
-
-    se1=createSocketListenSvc(svc1,6000,INADDR_ANY);
-    se2=createSocketListenSvc(svc2,6001,INADDR_ANY);
-    se3=createSocketListenSvc(svc3,6002,INADDR_ANY);
+    se=createSocketListenSvc(svc,6000,INADDR_ANY);
 
     // Boucle permanente de service 
 
-    pid_t pid1, pid2, pid3, pid4;
-    pid1 = fork();
-    if (pid1 == 0)
-    {
-        while (1) 
-        {
-            // Attente d’un appel
-            cltLen = sizeof(clt);
-            CHECK(sd1=accept(se1, (struct sockaddr *)&clt, &cltLen) , "Can't connect");
-            // attribution du role d'hébergeur de la partie
-            // Envoi du message à l'hébergeur
-            char rq[]="joueur 1";
-            CHECK(write(sd1, &rq, sizeof(rq)+1), "Can't send");
-            close(sd1);
-        }
-    }
-    
-    pid2 = fork();
-    if (pid2 == 0)
-    {
-        while (1) 
-        { 
-            // Attente d’un appel
-            cltLen = sizeof(clt);
-            CHECK(sd2=accept(se2, (struct sockaddr *)&clt, &cltLen) , "Can't connect");
-            // envois du message au client pour qu'il se connecte a l'hébergeur
-            char rq[]="joueur 2";
-            CHECK(write(sd2, &rq, sizeof(rq)+1), "Can't send");
-            close(sd2);
-        }
-    }
-
-    pid3 = fork();
-    if (pid3 == 0)
-    {
-        while (1) 
-        { 
-            // Attente d’un appel
-            cltLen = sizeof(clt);
-            CHECK(sd3=accept(se3, (struct sockaddr *)&clt, &cltLen) , "Can't connect");
-            // envois du message au client pour qu'il se connecte a l'hébergeur
-            char rq[]="joueur 3";
-            CHECK(write(sd3, &rq, sizeof(rq)+1), "Can't send");
-            close(sd3);
-        }
-    }
-
-    
-    waitpid(pid1,NULL,0);
-    waitpid(pid2,NULL,0);
-    waitpid(pid3,NULL,0);
-    close(se1);
-    close(se2);
-    close(se3);
+    while (1) {
+                //  Attente d’un appel
+                socklen_t clt1Len = sizeof(clt1);
+                socklen_t clt2Len = sizeof(clt2);
+                socklen_t clt3Len = sizeof(clt3);
+                printf("En attente du joueur 1\n");
+                CHECK(sd1=accept(se, (struct sockaddr *) &clt1, &clt1Len) , "Can't connect");
+ 
+                printf("En attente du joueur 2\n");
+                CHECK(sd2=accept(se, (struct sockaddr *) &clt2, &clt2Len) , "Can't connect");
+                
+                printf("En attente du joueur 3\n");
+                CHECK(sd3=accept(se, (struct sockaddr *) &clt3, &clt3Len) , "Can't connect");
+                
+                connection(sd1, sd2, clt2, sd3, clt3);
+                
+                close(sd1);
+                close(sd2);
+                close(sd3);
+                }
+    shutdown(se,3);
     return 0;
+}
+
+/* ------------------------------------------------------------------------ */
+/**
+ *  \fn         int connection()
+ *
+ *  \brief      Fonction qui indique leurs rôles aux clients et leur envoi les
+ *              informations pour la connection
+ */
+/* ------------------------------------------------------------------------ */
+int connection(int sd1, int sd2, struct sockaddr_in clt2, int sd3, struct sockaddr_in clt3)
+{
+    char reponse[MAX_BUFF];
+        
+    printf("debut communication\n");
+
+    CHECK(write(sd1, J1, strlen(J1)+1), "Can't write"); //notifie au joueur 1 qu'il est l'hébergeur
+    CHECK(write(sd2, J2, strlen(J2)+1), "Can't write"); //notifie au joueur 2 qu'il est joueur 2
+    CHECK(write(sd3, J3, strlen(J3)+1), "Can't write"); //notifie au joueur 3 qu'il est joueur 3
+
+    /*read(sd2,reponse,sizeof(reponse));
+    while(atoi(reponse)!=1){ //attente d'ack (OK) du client
+    read(sd2,reponse,sizeof(reponse));
+    sleep(1);
+    }
+
+    char addr[INET_ADDRSTRLEN];
+    inet_ntop(AF_INET, &clt2.sin_addr, addr, INET_ADDRSTRLEN);
+    write(sd2,addr,sizeof(addr)+1); //envoie de l'addr du serv au client
+    printf("envoie addr\n");
+
+    read(sd2,reponse,sizeof(reponse));
+    while(atoi(reponse)!=1){ //attente d'ack (OK) du client
+    read(sd2,reponse,sizeof(reponse));
+    sleep(1);
+    }
+
+    inet_ntop(AF_INET, &clt3.sin_addr, addr, INET_ADDRSTRLEN);
+    write(sd3,addr,sizeof(addr)+1); //envoie de l'addr du serv au client
+    printf("envoie addr\n");
+
+    read(sd3,reponse,sizeof(reponse));
+    while(atoi(reponse)!=1){ //attente d'ack (OK) du client
+    read(sd3,reponse,sizeof(reponse));
+    sleep(1);
+    }*/
+
+    printf("redirection terminée, peut acceullir de nouveaux joueurs");
 }

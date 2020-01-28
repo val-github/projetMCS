@@ -26,7 +26,6 @@ int createSocketListenClt(struct sockaddr_in svc,int port, int adresse)
 
     // Création de la socket d’appel et de dialogue
     CHECK(sock=socket(PF_INET, SOCK_STREAM, 0), "Can't create");
-    
     // Préparation de l’adressage du service à contacter
     svc.sin_family = PF_INET;
     svc.sin_port = htons (port);
@@ -35,7 +34,6 @@ int createSocketListenClt(struct sockaddr_in svc,int port, int adresse)
     
     // Demande d’une connexion au service
     CHECK(connect(sock, (struct sockaddr *)&svc, sizeof svc) , "Can't connect");
-    
     return sock;
 }
 
@@ -48,7 +46,7 @@ int createSocketListenClt(struct sockaddr_in svc,int port, int adresse)
 /* ------------------------------------------------------------------------ */
 int createSocketListenSvc(struct sockaddr_in svc,int port, int adresse)
 {
-    int se=0;
+    int se;
 
     // Création de la socket de réception d’écoute des appels
     CHECK(se=socket(PF_INET, SOCK_STREAM, 0), "Can't create");
@@ -70,46 +68,22 @@ int createSocketListenSvc(struct sockaddr_in svc,int port, int adresse)
 
 /* ------------------------------------------------------------------------ */
 /**
- *  \fn         void dialogueClt(int, struct sockaddr_in)
- *
- *  \brief      La fonction prend en charge les communications entre les 
- *              différents clients et le serveur; doit donner au premier client
- *              l'instrcuction d'utiliser la fonction gerant et doit donner aux
- *              autres clients l'adresse du premier client
- */
-/* ------------------------------------------------------------------------ */
-void dialogueClt (int sd, struct sockaddr_in clt) 
-{
-    char message[MAX_BUFF];
-    while(1)
-    {
-        read(sd, buffer,sizeof(buffer));//reponse du write du serveur
-        printf(" recu => %s\n", buffer);
-        
-        write(sd, message,strlen(message)+1);//envoie au read du client
-        
-    }
-}
-
-/* ------------------------------------------------------------------------ */
-/**
  *  \fn         void dialogueSrv (int, struct sockaddr_in, char *)
  *
  *  \brief      La fonction prend en charge les communications entre les 
  *              différents clients, le serveur et l'hébergeur
  */
 /* ------------------------------------------------------------------------ */
-void dialogueSrv (int sd, struct sockaddr_in srv, char *message)
+void dialogueSrv (int sd)
 {
     char reponse[MAX_BUFF];
-    CHECK(read(sd, reponse, sizeof(reponse)), "Can't send");//reponse du write du client
+    read(sd, reponse, sizeof(reponse));//reponse du write du client
     printf(" recu => %s\n",reponse);
-    char rep1[]="joueur 1";
-    char rep2[]="joueur 2";
-    char rep3[]="joueur 3";
-    int test1=strcmp(reponse,rep1);
-    int test2=strcmp(reponse,rep2);
-    int test3=strcmp(reponse,rep3);
+    //int rep=atoi(reponse);
+    int test1=strcmp(reponse,J1);
+    int test2=strcmp(reponse,J2);
+    int test3=strcmp(reponse,J3);
+    close(sd);
     if (test1==0)
     {
         printf("role: joueur 1 et hébergeur\n");
@@ -120,14 +94,9 @@ void dialogueSrv (int sd, struct sockaddr_in srv, char *message)
         printf("role: joueur 2\n");
         int sock;
 	    struct sockaddr_in svc;
-	    char message[MAX_BUFF];
-
-        sock=createSocketListenClt(svc,6011,inet_addr(INADDR_SVC));
-
-        while(1)
-        {
-            cltPartie (sock);
-        }
+        
+        sock=createSocketListenClt(svc,6002,inet_addr(INADDR_SVC));
+        cltPartie (sock,svc);
         close(sock);
     }
 
@@ -136,95 +105,44 @@ void dialogueSrv (int sd, struct sockaddr_in srv, char *message)
         printf("role: joueur 3\n");
         int sock;
 	    struct sockaddr_in svc;
-	    char message[MAX_BUFF];
 
-        sock=createSocketListenClt(svc,6012,inet_addr(INADDR_SVC));
-
-        while(1)
-        {
-            cltPartie (sock);
-        }
+        sock=createSocketListenClt(svc,6002,inet_addr(INADDR_SVC));
+        cltPartie (sock,svc);
         close(sock);
     }
 }
 
 /* ------------------------------------------------------------------------ */
 /**
- *  \fn         void gerant ()
+ *  \fn         int gerant ()
  * 
  *  \brief      La fonction contient les instruction permettant
- *              de connecter les différents clients à l'hébergeur
+ *              à l'hébergeur de se connecter aux clients et de
+ *              lancer la partie
  */
 /* ------------------------------------------------------------------------ */
-void gerant ()
+int gerant ()
 {
         printf("fonction gerant lancée\n");
 
-        int se1,se2,se3,sd1,sd2,sd3;
-        struct sockaddr_in svc1,svc2,svc3,clt;
+        int se,sd1,sd2;
+        struct sockaddr_in svc,clt1,clt2;
+        socklen_t clt1Len = sizeof(clt1);
+        socklen_t clt2Len = sizeof(clt2);
 
-        se1=createSocketListenSvc(svc1,6010,inet_addr(INADDR_SVC));
-        se2=createSocketListenSvc(svc2,6011,inet_addr(INADDR_SVC));
-        se3=createSocketListenSvc(svc3,6012,inet_addr(INADDR_SVC));
+        se=createSocketListenSvc(svc,6002,inet_addr(INADDR_SVC));
+        printf("attente de joureur 2 et joueur 3\n");
+        
+        CHECK(listen(se, 5) , "Can't calibrate");
+        CHECK(sd1=accept(se, (struct sockaddr *) &clt1, &clt1Len) , "Can't connect");
+        printf("connection avec joueur 2 éffectuée\n");
+        CHECK(sd2=accept(se, (struct sockaddr *) &clt2, &clt2Len) , "Can't connect");
+        printf("connection avec joueur 3 éffectuée\n");
 
-        pid_t pid1, pid2, pid3;
-        socklen_t cltlen;
-        pid1 = fork();
-        if (pid1 == 0)
-        {
-            while (1) 
-            { 
-                // Attente d’un appel
-                cltlen = sizeof(clt);
-                CHECK(sd1=accept(se1, (struct sockaddr *)&clt, &cltlen) , "Can't connect");
-                cltPartie(se1);
-                close(sd1);
-            }
-        }
-    
-        pid2 = fork();
-        if (pid2 == 0)
-        {
-            while (1) 
-            { 
-                // Attente d’un appel
-                cltlen = sizeof(clt);
-                CHECK(sd2=accept(se2, (struct sockaddr *)&clt, &cltlen) , "Can't connect");
-                cltPartie(se2);
-                close(sd2);
-            }
-        }
+        mainPartie (sd1,sd2);
 
-        pid3 = fork();
-        if (pid3 == 0)
-        {
-            while (1) 
-            { 
-                // Attente d’un appel
-                cltlen = sizeof(clt);
-                CHECK(sd3=accept(se3, (struct sockaddr *)&clt, &cltlen) , "Can't connect");
-                cltPartie(se3);
-                close(sd3);
-            }
-        }
-        int sock;
-	    struct sockaddr_in svc;
-	    char message[MAX_BUFF];
-
-        sock=createSocketListenClt(svc,6010,inet_addr(INADDR_SVC));
-
-        while(1)
-        {
-            cltPartie (sock);
-        }
-        mainPartie();
-        close(sock);
-        waitpid(pid1,NULL,0);
-        waitpid(pid2,NULL,0);
-        waitpid(pid3,NULL,0);
-        close(se1);
-        close(se2);
-        close(se3);
+        close(se);
+        return 0;
 }
 
 /* ------------------------------------------------------------------------ */
@@ -235,8 +153,66 @@ void gerant ()
  *              à gérer la partie coté joureurs
  */
 /* ------------------------------------------------------------------------ */
-void cltPartie(int sock)
+void cltPartie(int sd, struct sockaddr_in svc)
 {
-    printf("mainPartie lancé");
-    mainPartie();
+    char test[]=FIN;
+    printf("Partie lancée\n");
+    char reponse[MAX_BUFF];
+    do
+    {
+        read(sd, reponse, sizeof(reponse));
+        printf("%s",reponse);
+        write(sd,ACK,sizeof(ACK));
+
+        if (strcmp(reponse,DEM)==0)
+        {
+            char ack[MAX_BUFF];
+            int* num;
+            printf("combien de cartes veux-tu changer?");
+            do
+            {
+                scanf("%d",num);
+                CHECK(write(sd,num,MAX_BUFF),"can't send");
+                read(sd,ack,sizeof(ack));
+                while(strcmp(ack,ACK)!=0){ //attente d'ack (ACK) du client
+                read(sd,ack,sizeof(ack));
+                sleep(1);
+                }
+                CHECK(write(sd,ACK,sizeof(ACK)),"can't send");
+            } while (strcmp(reponse,DEM)!=0);
+
+            printf("Quelle carte veux tu changer ?\n");
+            do
+            {
+                printf("Veuillez taper le numero de votre carte (entre 6 et 13) : ");
+                scanf("%d",num);
+                CHECK(write(sd,num,strlen(DEM)+1),"can't send");
+                read(sd,ack,sizeof(ack));
+                while(strcmp(ack,ACK)!=0){ //attente d'ack (ACK) du client
+                read(sd,ack,sizeof(ack));
+                sleep(1);
+                }
+                read(sd, reponse, sizeof(reponse));
+                write(sd,ACK,sizeof(ACK));
+            } while (strcmp(reponse,DEM)!=0);
+            
+            do
+            {
+                printf("Veuillez taper la couleur de votre carte (coeur, carreau, trefle et pique) : ");
+                char couleur[10];
+                scanf("%s",couleur);
+                CHECK(write(sd,couleur,strlen(couleur)),"can't send");
+                read(sd, reponse, sizeof(reponse));
+                write(sd,ACK,sizeof(ACK));
+            } while (strcmp(reponse,DEM)!=0);
+            
+            (sd, reponse, sizeof(reponse));
+            printf("%s",reponse);
+            printf("fin échange de cartes");
+        }
+
+
+    } while (strcmp(reponse,test)!=0);
 }
+
+

@@ -23,6 +23,7 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <time.h>
+#include <stdint.h>
 
 /* ************************* DEFINE ************************* */
 #define CHECK(sts,msg)              \
@@ -38,19 +39,26 @@
 #define OK "OK"
 #define NOK "Not OK"
 #define MAX_BUFF 1024
-
+#define J1 "1"
+#define J2 "2"
+#define J3 "3"
+#define ACK "ack" 
+#define FIN "fin de partie"
+#define DEM "dem"
+ 
 /* ******************** VARIABLES GLOBALES ******************** */
 char buffer[MAX_BUFF];
 
 /* ******************* PROTOTYPES ******************** */
 int createSocketListenClt(struct sockaddr_in ,int , int);
 int createSocketListenSvc(struct sockaddr_in ,int , int);
-void dialogueClt (int , struct sockaddr_in);
-void dialogueSrv (int , struct sockaddr_in , char *);
-void gerant();
+void dialogueClt (int , struct sockaddr_in,int , struct sockaddr_in);
+void dialogueSrv (int );
+int gerant();
 void cltPartie();
 
 /* ******************* PROTOTYPES ******************** */
+void mainPartie(int,int);
 int random_6_13();
 int random_0_3();
 void creationPaquetMelange();
@@ -58,15 +66,15 @@ int verifierCarte(int tab[32][2], int, int , int);
 void creationListeCartes();
 void distribuer2Cartes();
 int emplacementCarte(int tab[6][3],int *, int, int, int);
-void changerCartes(int);
+void changerCartes(int,int);
 int couleurCartes(char *);
 char *cartesCouleur(int);
 void affichageDistribution();
 void affichageTapis();
 void distribuerTapis(int);
-void affichageFenetre(int);
+void affichageFenetre(int,int);
 void creationNbPoints(int joueur);
-void demanderMainFinale(int);
+void demanderMainFinale(int,int);
 int existeTapis(int, int, int, int, int);
 int couleur(int);
 int paire(int, int);
