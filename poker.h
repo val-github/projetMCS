@@ -42,6 +42,9 @@
 #define J1 "1"
 #define J2 "2"
 #define J3 "3"
+#define P1 "10"
+#define P2 "20"
+#define P3 "30"
 #define ACK "ack" 
 #define FIN "fin de partie"
 #define DEM "dem"
@@ -50,6 +53,7 @@
 char buffer[MAX_BUFF];
 
 /* ******************* PROTOTYPES ******************** */
+int connection(int,int,struct sockaddr_in,int,struct sockaddr_in);
 int createSocketListenClt(struct sockaddr_in ,int , int);
 int createSocketListenSvc(struct sockaddr_in ,int , int);
 void dialogueClt (int , struct sockaddr_in,int , struct sockaddr_in);
@@ -66,15 +70,15 @@ int verifierCarte(int tab[32][2], int, int , int);
 void creationListeCartes();
 void distribuer2Cartes();
 int emplacementCarte(int tab[6][3],int *, int, int, int);
-void changerCartes(int,int);
+void changerCartes(int,int[6][3],int[5][2]);
 int couleurCartes(char *);
 char *cartesCouleur(int);
 void affichageDistribution();
 void affichageTapis();
 void distribuerTapis(int);
-void affichageFenetre(int,int);
+void affichageFenetre(int,int[6][3],int[5][2]);
 void creationNbPoints(int joueur);
-void demanderMainFinale(int,int);
+void demanderMainFinale(int);
 int existeTapis(int, int, int, int, int);
 int couleur(int);
 int paire(int, int);

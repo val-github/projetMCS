@@ -96,7 +96,7 @@ void dialogueSrv (int sd)
 	    struct sockaddr_in svc;
         
         sock=createSocketListenClt(svc,6002,inet_addr(INADDR_SVC));
-        cltPartie (sock,svc);
+        cltPartie (sock,svc,2);
         close(sock);
     }
 
@@ -107,7 +107,7 @@ void dialogueSrv (int sd)
 	    struct sockaddr_in svc;
 
         sock=createSocketListenClt(svc,6002,inet_addr(INADDR_SVC));
-        cltPartie (sock,svc);
+        cltPartie (sock,svc,3);
         close(sock);
     }
 }
@@ -153,7 +153,7 @@ int gerant ()
  *              à gérer la partie coté joureurs
  */
 /* ------------------------------------------------------------------------ */
-void cltPartie(int sd, struct sockaddr_in svc)
+void cltPartie(int sd, struct sockaddr_in svc,int joueur)
 {
     char test[]=FIN;
     printf("Partie lancée\n");
@@ -161,57 +161,56 @@ void cltPartie(int sd, struct sockaddr_in svc)
     do
     {
         read(sd, reponse, sizeof(reponse));
-        printf("%s",reponse);
         write(sd,ACK,sizeof(ACK));
-
-        if (strcmp(reponse,DEM)==0)
+        int test1=strcmp(reponse,P1);
+        int test2=strcmp(reponse,P2);
+        int test3=strcmp(reponse,P3);
+        close(sd);
+        if (test1==0)
         {
-            char ack[MAX_BUFF];
-            int* num;
-            printf("combien de cartes veux-tu changer?");
-            do
-            {
-                scanf("%d",num);
-                CHECK(write(sd,num,MAX_BUFF),"can't send");
-                read(sd,ack,sizeof(ack));
-                while(strcmp(ack,ACK)!=0){ //attente d'ack (ACK) du client
-                read(sd,ack,sizeof(ack));
-                sleep(1);
-                }
-                CHECK(write(sd,ACK,sizeof(ACK)),"can't send");
-            } while (strcmp(reponse,DEM)!=0);
+            char rep[MAX_BUFF];
 
-            printf("Quelle carte veux tu changer ?\n");
-            do
-            {
-                printf("Veuillez taper le numero de votre carte (entre 6 et 13) : ");
-                scanf("%d",num);
-                CHECK(write(sd,num,strlen(DEM)+1),"can't send");
-                read(sd,ack,sizeof(ack));
-                while(strcmp(ack,ACK)!=0){ //attente d'ack (ACK) du client
-                read(sd,ack,sizeof(ack));
-                sleep(1);
-                }
-                read(sd, reponse, sizeof(reponse));
-                write(sd,ACK,sizeof(ACK));
-            } while (strcmp(reponse,DEM)!=0);
+            read(sd,rep,strlen(rep));
+            int cartes[6][3];
+            sprintf(cartes,"%d",rep);
+            CHECK(write(sd, ACK, strlen(ACK)+1), "Can't write");
+
+            read(sd,rep,sltrlen(rep));
+            int commun[5][2];
+            sprintf(commun,"%d",rep);
+            CHECK(write(sd, ACK, strlen(ACK)+1), "Can't write");
+
+            affichageFenetre(joueur,cartes,commun);
+            changerCartes(joueur,cartes,commun);
+            affichageFenetre(joueur,cartes,commun);
             
-            do
-            {
-                printf("Veuillez taper la couleur de votre carte (coeur, carreau, trefle et pique) : ");
-                char couleur[10];
-                scanf("%s",couleur);
-                CHECK(write(sd,couleur,strlen(couleur)),"can't send");
-                read(sd, reponse, sizeof(reponse));
-                write(sd,ACK,sizeof(ACK));
-            } while (strcmp(reponse,DEM)!=0);
-            
-            (sd, reponse, sizeof(reponse));
-            printf("%s",reponse);
-            printf("fin échange de cartes");
+        }
+        if (test2==0)
+        {
+            char rep[MAX_BUFF];
+
+            read(sd,rep,sltrlen(rep));
+            int cartes[6][3];
+            sprintf(cartes,"%d",rep);
+            CHECK(write(sd, ACK, strlen(ACK)+1), "Can't write");
+
+            read(sd,rep,sltrlen(rep));
+            int commun[5][2];
+            sprintf(commun,"%d",rep);
+            CHECK(write(sd, ACK, strlen(ACK)+1), "Can't write");
+
+            changerCartes(joueur,cartes,commun);
+            affichageFenetre(joueur,cartes,commun);
         }
 
-
+        if (test3==0)
+        {
+            for(int i=1;i<4;i++)
+            {
+                creationNbPoints(i);
+            }
+        }
+        strcpy(reponse,"0");
     } while (strcmp(reponse,test)!=0);
 }
 
