@@ -2,7 +2,7 @@
  *  \file       poker.h
  * 
  *  \brief      Ce programme inclus les #define et les #include ainsi que 
- *              les portotypes des fonctions et les variables globales
+ *              les prototypes des fonctions et les variables globales
  *
  *  \author     Gwendoline Quettier & Valentin Blet
  *
@@ -70,6 +70,7 @@ int verifierCarte(int tab[32][2], int, int , int);
 void creationListeCartes();
 void distribuer2Cartes();
 int emplacementCarte(int tab[6][3],int *, int, int, int);
+void gagnant();
 void changerCartes(int,int[6][3],int[5][2]);
 int couleurCartes(char *);
 char *cartesCouleur(int);

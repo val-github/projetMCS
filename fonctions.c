@@ -2,7 +2,7 @@
  *  \file       fonctions.c
  * 
  *  \brief      Ce programme inclus les fonctions utilisées par 
- *              les client et les serveurs
+ *              les clients et les serveurs
  *
  *  \author     Gwendoline Quettier & Valentin Blet
  *
@@ -89,7 +89,7 @@ void dialogueSrv (int sd)
         printf("role: joueur 1 et hébergeur\n");
         gerant();
     }
-    if (test2==0)
+    else if (test2==0)
     {
         printf("role: joueur 2\n");
         int sock;
@@ -99,8 +99,7 @@ void dialogueSrv (int sd)
         cltPartie (sock,svc,2);
         close(sock);
     }
-
-    if (test3==0)
+    else if (test3==0)
     {
         printf("role: joueur 3\n");
         int sock;
@@ -123,26 +122,26 @@ void dialogueSrv (int sd)
 /* ------------------------------------------------------------------------ */
 int gerant ()
 {
-        printf("fonction gerant lancée\n");
+    printf("fonction gerant lancée\n");
 
-        int se,sd1,sd2;
-        struct sockaddr_in svc,clt1,clt2;
-        socklen_t clt1Len = sizeof(clt1);
-        socklen_t clt2Len = sizeof(clt2);
+    int se,sd1,sd2;
+    struct sockaddr_in svc,clt1,clt2;
+    socklen_t clt1Len = sizeof(clt1);
+    socklen_t clt2Len = sizeof(clt2);
 
-        se=createSocketListenSvc(svc,6002,inet_addr(INADDR_SVC));
-        printf("attente de joureur 2 et joueur 3\n");
-        
-        CHECK(listen(se, 5) , "Can't calibrate");
-        CHECK(sd1=accept(se, (struct sockaddr *) &clt1, &clt1Len) , "Can't connect");
-        printf("connection avec joueur 2 éffectuée\n");
-        CHECK(sd2=accept(se, (struct sockaddr *) &clt2, &clt2Len) , "Can't connect");
-        printf("connection avec joueur 3 éffectuée\n");
+    se=createSocketListenSvc(svc,6002,inet_addr(INADDR_SVC));
+    printf("attente de joureur 2 et joueur 3\n");
+    
+    CHECK(listen(se, 5) , "Can't calibrate");
+    CHECK(sd1=accept(se, (struct sockaddr *) &clt1, &clt1Len) , "Can't connect");
+    printf("connection avec joueur 2 éffectuée\n");
+    CHECK(sd2=accept(se, (struct sockaddr *) &clt2, &clt2Len) , "Can't connect");
+    printf("connection avec joueur 3 éffectuée\n");
 
-        mainPartie (sd1,sd2);
+    mainPartie (sd1,sd2);
 
-        close(se);
-        return 0;
+    close(se);
+    return 0;
 }
 
 /* ------------------------------------------------------------------------ */

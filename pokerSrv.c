@@ -1,8 +1,7 @@
 /**
- *  \file       poker.h
+ *  \file       pokerSrv.c
  * 
- *  \brief      Ce programme inclus les #define et les #include ainsi que 
- *              les prototypes des fonctions et les variables globales
+ *  \brief      Ce programme est le programme executé par le serveur
  *
  *  \author     Gwendoline Quettier & Valentin Blet
  *
@@ -31,26 +30,27 @@ int main()
 
     // Boucle permanente de service 
 
-    while (1) {
-                //  Attente d’un appel
-                socklen_t clt1Len = sizeof(clt1);
-                socklen_t clt2Len = sizeof(clt2);
-                socklen_t clt3Len = sizeof(clt3);
-                printf("En attente du joueur 1\n");
-                CHECK(sd1=accept(se, (struct sockaddr *) &clt1, &clt1Len) , "Can't connect");
- 
-                printf("En attente du joueur 2\n");
-                CHECK(sd2=accept(se, (struct sockaddr *) &clt2, &clt2Len) , "Can't connect");
-                
-                printf("En attente du joueur 3\n");
-                CHECK(sd3=accept(se, (struct sockaddr *) &clt3, &clt3Len) , "Can't connect");
-                
-                connection(sd1, sd2, clt2, sd3, clt3);
-                
-                close(sd1);
-                close(sd2);
-                close(sd3);
-                }
+    while (1) 
+    {
+        //  Attente d’un appel
+        socklen_t clt1Len = sizeof(clt1);
+        socklen_t clt2Len = sizeof(clt2);
+        socklen_t clt3Len = sizeof(clt3);
+        printf("En attente du joueur 1\n");
+        CHECK(sd1=accept(se, (struct sockaddr *) &clt1, &clt1Len) , "Can't connect");
+
+        printf("En attente du joueur 2\n");
+        CHECK(sd2=accept(se, (struct sockaddr *) &clt2, &clt2Len) , "Can't connect");
+        
+        printf("En attente du joueur 3\n");
+        CHECK(sd3=accept(se, (struct sockaddr *) &clt3, &clt3Len) , "Can't connect");
+        
+        connection(sd1, sd2, clt2, sd3, clt3);
+        
+        close(sd1);
+        close(sd2);
+        close(sd3);
+    }
     shutdown(se,3);
     return 0;
 }
@@ -67,7 +67,7 @@ int connection(int sd1, int sd2, struct sockaddr_in clt2, int sd3, struct sockad
 {
     char reponse[MAX_BUFF];
         
-    printf("debut communication\n");
+    printf("Debut des communications\n");
 
     CHECK(write(sd1, J1, strlen(J1)+1), "Can't write"); //notifie au joueur 1 qu'il est l'hébergeur
     CHECK(write(sd2, J2, strlen(J2)+1), "Can't write"); //notifie au joueur 2 qu'il est joueur 2
@@ -100,5 +100,5 @@ int connection(int sd1, int sd2, struct sockaddr_in clt2, int sd3, struct sockad
     sleep(1);
     }*/
 
-    printf("redirection terminée, peut acceullir de nouveaux joueurs");
+    printf("Redirection terminée. On peut acceuillir de nouveaux joueurs.\n");
 }

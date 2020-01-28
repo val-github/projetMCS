@@ -1,3 +1,12 @@
+/**
+ *  \file       pile.c
+ * 
+ *  \brief      Ce programme inclus les fonctions d'utilistation d'une pile
+ *
+ *  \date       26 Janvier 2020
+ *
+ *  \version    1.0
+*/
 #include "poker.h"
 
 /* ******************** TYPEDEF ******************** */

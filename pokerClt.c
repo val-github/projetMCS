@@ -1,8 +1,7 @@
 /**
  *  \file       pokerClt.c
  * 
- *  \brief      Ce programme inclus les #define et les #include ainsi que 
- *              les portotypes des fonctions et les variables globales
+ *  \brief      Ce programme est le programme executé par les clients
  *
  *  \author     Gwendoline Quettier & Valentin Blet
  *

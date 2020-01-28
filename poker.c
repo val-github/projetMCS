@@ -32,9 +32,6 @@ int mainFinale[15][3];
 /* ------------------------------------------------------------------------ */
 void mainPartie(int sd1, int sd2)
 {
-    /* IL RESTE A FINIR
-      - dire qui a gagner    */
-
     printf("Bonjour dans cette partie de poker\n");
     creationPaquetMelange();
     creationListeCartes();
@@ -73,33 +70,43 @@ void mainPartie(int sd1, int sd2)
 
     CHECK(write(sd1, P2, strlen(P2)+1), "Can't write");
     read(sd1,reponse,sltrlen(reponse));
-    while(strcmp(reponse,ACK)!=0){
+    while(strcmp(reponse,ACK)!=0)
+    {
         read(sd1,reponse,sltrlen(reponse));
     }
+    
     CHECK(write(sd1, cartes, strlen(cartes)+1), "Can't write");
     read(sd1,reponse,sltrlen(reponse));
-    while(strcmp(reponse,ACK)!=0){
+    while(strcmp(reponse,ACK)!=0)
+    {
         read(sd1,reponse,sltrlen(reponse));
     }
+
     CHECK(write(sd1, commun, strlen(commun)+1), "Can't write");
     read(sd1,reponse,sltrlen(reponse));
-    while(strcmp(reponse,ACK)!=0){
+    while(strcmp(reponse,ACK)!=0)
+    {
         read(sd1,reponse,sltrlen(reponse));
     }
 
     CHECK(write(sd2, P2, strlen(P2)+1), "Can't write");
     read(sd2,reponse,sltrlen(reponse));
-    while(strcmp(reponse,ACK)!=0){
+    while(strcmp(reponse,ACK)!=0)
+    {
         read(sd2,reponse,sltrlen(reponse));
     }
+
     CHECK(write(sd2, cartes, strlen(cartes)+1), "Can't write");
     read(sd2,reponse,sltrlen(reponse));
-    while(strcmp(reponse,ACK)!=0){
+    while(strcmp(reponse,ACK)!=0)
+    {
         read(sd2,reponse,sltrlen(reponse));
     }
+
     CHECK(write(sd2, commun, strlen(commun)+1), "Can't write");
     read(sd2,reponse,sltrlen(reponse));
-    while(strcmp(reponse,ACK)!=0){
+    while(strcmp(reponse,ACK)!=0)
+    {
         read(sd2,reponse,sltrlen(reponse));
     }
     
@@ -111,17 +118,6 @@ void mainPartie(int sd1, int sd2)
         printf("\n\n\n\n\n\n\n\n\n\n");
     }*/
 
-    /*tailleMain=15;
-    int carte=0;
-    int mainFinale[15][3]={ {11,1,1},{8,1,1},{10,1,1},{9,2,1},{7,3,1},
-                            {10,0,2},{9,1,2},{9,2,2},{9,2,2},{9,1,2},
-                            {10,1,3},{11,0,3},{12,1,3},{13,0,3},{9,2,3}};
-    for(int i=0;i<tailleMain;i++)
-    {
-        printf("joueur %d : [%d,%s]\n",mainFinale[i][2],mainFinale[i][0],cartesCouleur(mainFinale[i][1]));
-    }*/
-    
-
     for(int i=1;i<nombreJoueur+1;i++)
     {
         creationNbPoints(i);
@@ -131,8 +127,89 @@ void mainPartie(int sd1, int sd2)
     CHECK(write(sd1, P2, strlen(P2)+1), "Can't write");
     CHECK(write(sd2, P2, strlen(P2)+1), "Can't write");
 
-    CHECK(write(sd1, FIN, strlen(FIN)+1), "Can't write");
-    CHECK(write(sd2, FIN, strlen(FIN)+1), "Can't write");
+    sprintf(rep,"%d",reponse);
+    sprintf(rep1,"%d",reponse1);
+
+    CHECK(write(clt1, "joueur ", strlen("joueur ") + 1), "Can't send");
+    read(clt1,ack,sizeof(ack));
+    while(strcmp(ack,ACK)!=0) //attente d'ack (ACK) du client
+    {
+        read(clt1,ack,sizeof(ack));
+        sleep(1);
+    }
+
+    CHECK(write(clt1, rep1, strlen(rep1) + 1), "Can't send");
+    read(clt1,ack,sizeof(ack));
+    while(strcmp(ack,ACK)!=0)//attente d'ack (ACK) du client
+    {
+        read(clt1,ack,sizeof(ack));
+        sleep(1);
+    }
+    CHECK(write(clt1, ": ", strlen(": ") + 1), "Can't send");
+    read(clt1,ack,sizeof(ack));
+    while(strcmp(ack,ACK)!=0)//attente d'ack (ACK) du client
+    { 
+        read(clt1,ack,sizeof(ack));
+        sleep(1);
+    }
+
+    CHECK(write(clt1, rep, strlen(rep) + 1), "Can't send");
+    read(clt1,ack,sizeof(ack));
+    while(strcmp(ack,ACK)!=0)//attente d'ack (ACK) du client
+    { 
+        read(clt1,ack,sizeof(ack));
+        sleep(1);
+    }
+
+    CHECK(write(clt1, "\n", strlen("\n") + 1), "Can't send");
+    read(clt1,ack,sizeof(ack));
+    while(strcmp(ack,ACK)!=0)//attente d'ack (ACK) du client
+    { 
+        read(clt1,ack,sizeof(ack));
+        sleep(1);
+    }
+
+    CHECK(write(clt2, "joueur ", strlen("joueur ") + 1), "Can't send");
+    read(clt2,ack,sizeof(ack));
+    while(strcmp(ack,ACK)!=0)//attente d'ack (ACK) du client
+    { 
+        read(clt2,ack,sizeof(ack));
+        sleep(1);
+    }
+
+    CHECK(write(clt2, rep1, strlen(rep1) + 1), "Can't send");
+    read(clt2,ack,sizeof(ack));
+    while(strcmp(ack,ACK)!=0)//attente d'ack (ACK) du client
+    { 
+        read(clt2,ack,sizeof(ack));
+        sleep(1);
+    }
+    CHECK(write(clt2, ":\t", strlen("\n") + 1), "Can't send");
+    read(clt2,ack,sizeof(ack));
+    while(strcmp(ack,ACK)!=0)//attente d'ack (ACK) du client
+    { 
+        read(clt2,ack,sizeof(ack));
+        sleep(1);
+    }
+    CHECK(write(clt2, rep, strlen(rep) + 1), "Can't send");
+    read(clt2,ack,sizeof(ack));
+    while(strcmp(ack,ACK)!=0)//attente d'ack (ACK) du client
+    { 
+        read(clt2,ack,sizeof(ack));
+        sleep(1);
+    }
+    CHECK(write(clt2, "\n", strlen("\n") + 1), "Can't send");
+    read(clt2,ack,sizeof(ack));
+    while(strcmp(ack,ACK)!=0)//attente d'ack (ACK) du client
+    { 
+        read(clt2,ack,sizeof(ack));
+        sleep(1);
+    }
+
+    gagnant();
+
+    CHECK(write(clt1, FIN, strlen(FIN) + 1), "Can't send");
+    CHECK(write(clt2, FIN, strlen(FIN) + 1), "Can't send");  
 }
 
 /* ------------------------------------------------------------------------ */
@@ -940,6 +1017,27 @@ int existeTapis(int nombre, int couleur, int joueur, int cas, int tour)//verifie
         }    
     }
     return 0; //la carte n'existe pas
+}
+
+/* ------------------------------------------------------------------------ */
+/**
+ * \fn          void gagnant()
+ *
+ * \brief       La fonction regarde qui a le score le plus grand et l'affiche
+ */
+/* ------------------------------------------------------------------------ */
+void gagnant()
+{
+    int score=nbPoints[1],joueur=1;
+    for(int i=2;i<nombreJoueur+1;i++)
+    {
+        if(score<nbPoints[i])
+        {
+            score=nbPoints[i];
+            joueur=i;
+        }
+    }
+    printf("Le gagnant est le joueur %d avec %d points !!\n",joueur,score);
 }
 
 /* ------------------------------------------------------------------------ */
