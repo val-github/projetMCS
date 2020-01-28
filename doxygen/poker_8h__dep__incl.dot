@@ -1,0 +1,21 @@
+digraph "poker.h"
+{
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  Node1 [label="poker.h",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black"];
+  Node1 -> Node2 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node2 [label="fonctions.c",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$fonctions_8c.html",tooltip="Ce programme inclus les fonctions utilisées par les clients et les serveurs. "];
+  Node2 -> Node3 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node3 [label="pokerClt.c",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$poker_clt_8c.html",tooltip="Ce programme est le programme executé par les clients. "];
+  Node2 -> Node4 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node4 [label="pokerSrv.c",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$poker_srv_8c.html",tooltip="Ce programme est le programme executé par le serveur. "];
+  Node1 -> Node5 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node5 [label="pile.c",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$pile_8c.html",tooltip="Ce programme inclus les fonctions d&#39;utilistation d&#39;une pile. "];
+  Node5 -> Node6 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node6 [label="poker.c",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$poker_8c.html",tooltip="Ce programme inclus les fonctions utilisées par l&#39;application de poker. "];
+  Node6 -> Node3 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node6 -> Node4 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node1 -> Node6 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node1 -> Node3 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node1 -> Node4 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+}
