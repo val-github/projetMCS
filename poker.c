@@ -32,8 +32,6 @@ int mainFinale[15][3];
 /* ------------------------------------------------------------------------ */
 void mainPartie(int sd1, int sd2)
 {
-    char reponse[MAX_BUFF];
-    char reponse1[MAX_BUFF];
     printf("Bonjour dans cette partie de poker\n");
     creationPaquetMelange();
     creationListeCartes();
@@ -48,16 +46,7 @@ void mainPartie(int sd1, int sd2)
     affichageFenetre(1);
 
     CHECK(write(sd1, P1, strlen(P1)+1), "Can't write");
-    read(sd1, reponse, sizeof(reponse));
-    while(strcmp(reponse,ACK2)!=0)
-    {read(sd1, reponse, sizeof(reponse));}
-
     CHECK(write(sd2, P1, strlen(P1)+1), "Can't write");
-    read(sd2, reponse1, sizeof(reponse1));
-    while(strcmp(reponse1,ACK2)!=0)
-    {read(sd2, reponse1, sizeof(reponse1));}
-    strcpy(reponse,"null");
-    strcpy(reponse1,"null");
 
     /*for(int i=1;i<nombreJoueur+1;i++)
     {
@@ -74,19 +63,8 @@ void mainPartie(int sd1, int sd2)
     affichageFenetre(1);
 
     CHECK(write(sd1, P2, strlen(P2)+1), "Can't write");
-    read(sd1, reponse, sizeof(reponse));
-    while(strcmp(reponse,ACK2)!=0)
-    {read(sd1, reponse, sizeof(reponse));}
-
     CHECK(write(sd2, P2, strlen(P2)+1), "Can't write");
-    read(sd2, reponse1, sizeof(reponse1));
-    while(strcmp(reponse1,ACK2)!=0)
-    {read(sd2, reponse1, sizeof(reponse1));}
 
-    strcpy(reponse,"null");
-    strcpy(reponse1,"null");
-
-    
     /*for(int i=1;i<nombreJoueur+1;i++)
     {
         printf("\n\n");
