@@ -168,38 +168,19 @@ void cltPartie(int sd, struct sockaddr_in svc,int joueur)
         if (test1==0)
         {
             char rep[MAX_BUFF];
-
-            read(sd,rep,strlen(rep));
-            int cartes[6][3];
-            sprintf(cartes,"%d",rep);
-            CHECK(write(sd, ACK, strlen(ACK)+1), "Can't write");
-
-            read(sd,rep,sltrlen(rep));
-            int commun[5][2];
-            sprintf(commun,"%d",rep);
-            CHECK(write(sd, ACK, strlen(ACK)+1), "Can't write");
-
-            affichageFenetre(joueur,cartes,commun);
-            changerCartes(joueur,cartes,commun);
-            affichageFenetre(joueur,cartes,commun);
-            
+            affichageFenetre(joueur);
+            changerCartes(joueur);
+            affichageFenetre(joueur);
+            strcpy(reponse,"null");
+            write(sd,ACK2,sizeof(ACK2));            
         }
         if (test2==0)
         {
-            char rep[MAX_BUFF];
-
-            read(sd,rep,sltrlen(rep));
-            int cartes[6][3];
-            sprintf(cartes,"%d",rep);
-            CHECK(write(sd, ACK, strlen(ACK)+1), "Can't write");
-
-            read(sd,rep,sltrlen(rep));
-            int commun[5][2];
-            sprintf(commun,"%d",rep);
-            CHECK(write(sd, ACK, strlen(ACK)+1), "Can't write");
-
-            changerCartes(joueur,cartes,commun);
-            affichageFenetre(joueur,cartes,commun);
+            affichageFenetre(joueur);
+            demanderMainFinale(joueur);
+            affichageFenetre(joueur);
+            strcpy(reponse,"null");
+            write(sd,ACK2,sizeof(ACK2));
         }
 
         if (test3==0)
@@ -207,9 +188,12 @@ void cltPartie(int sd, struct sockaddr_in svc,int joueur)
             for(int i=1;i<4;i++)
             {
                 creationNbPoints(i);
+                gagnant();
+                strcpy(reponse,"null");
+                write(sd,ACK2,sizeof(ACK2));
             }
         }
-        strcpy(reponse,"0");
+        
     } while (strcmp(reponse,test)!=0);
 }
 

@@ -32,6 +32,8 @@ int mainFinale[15][3];
 /* ------------------------------------------------------------------------ */
 void mainPartie(int sd1, int sd2)
 {
+    char reponse[MAX_BUFF];
+    char reponse1[MAX_BUFF];
     printf("Bonjour dans cette partie de poker\n");
     creationPaquetMelange();
     creationListeCartes();
@@ -41,12 +43,21 @@ void mainPartie(int sd1, int sd2)
     distribuerTapis(2);
     printf("\n\n\n");
     
-    affichageFenetre(1,distribution,tapis);
-    changerCartes(1,distribution,tapis);
-    affichageFenetre(1,distribution,tapis);
+    affichageFenetre(1);
+    changerCartes(1);
+    affichageFenetre(1);
 
     CHECK(write(sd1, P1, strlen(P1)+1), "Can't write");
+    read(sd1, reponse, sizeof(reponse));
+    while(strcmp(reponse,ACK2)!=0)
+    {read(sd1, reponse, sizeof(reponse));}
+
     CHECK(write(sd2, P1, strlen(P1)+1), "Can't write");
+    read(sd2, reponse1, sizeof(reponse1));
+    while(strcmp(reponse1,ACK2)!=0)
+    {read(sd2, reponse1, sizeof(reponse1));}
+    strcpy(reponse,"null");
+    strcpy(reponse1,"null");
 
     /*for(int i=1;i<nombreJoueur+1;i++)
     {
@@ -58,57 +69,23 @@ void mainPartie(int sd1, int sd2)
     printf("2eme tour\n");
     distribuerTapis(3);
     
-    affichageFenetre(1,distribution,tapis);
+    affichageFenetre(1);
     demanderMainFinale(1);
-    affichageFenetre(1,distribution,tapis);
-
-    char reponse[MAX_BUFF];
-    char cartes[MAX_BUFF];
-    sprintf(cartes,"%d",distribution);
-    char commun[MAX_BUFF];
-    sprintf(commun,"%d",tapis);
+    affichageFenetre(1);
 
     CHECK(write(sd1, P2, strlen(P2)+1), "Can't write");
-    read(sd1,reponse,sltrlen(reponse));
-    while(strcmp(reponse,ACK)!=0)
-    {
-        read(sd1,reponse,sltrlen(reponse));
-    }
-    
-    CHECK(write(sd1, cartes, strlen(cartes)+1), "Can't write");
-    read(sd1,reponse,sltrlen(reponse));
-    while(strcmp(reponse,ACK)!=0)
-    {
-        read(sd1,reponse,sltrlen(reponse));
-    }
-
-    CHECK(write(sd1, commun, strlen(commun)+1), "Can't write");
-    read(sd1,reponse,sltrlen(reponse));
-    while(strcmp(reponse,ACK)!=0)
-    {
-        read(sd1,reponse,sltrlen(reponse));
-    }
+    read(sd1, reponse, sizeof(reponse));
+    while(strcmp(reponse,ACK2)!=0)
+    {read(sd1, reponse, sizeof(reponse));}
 
     CHECK(write(sd2, P2, strlen(P2)+1), "Can't write");
-    read(sd2,reponse,sltrlen(reponse));
-    while(strcmp(reponse,ACK)!=0)
-    {
-        read(sd2,reponse,sltrlen(reponse));
-    }
+    read(sd2, reponse1, sizeof(reponse1));
+    while(strcmp(reponse1,ACK2)!=0)
+    {read(sd2, reponse1, sizeof(reponse1));}
 
-    CHECK(write(sd2, cartes, strlen(cartes)+1), "Can't write");
-    read(sd2,reponse,sltrlen(reponse));
-    while(strcmp(reponse,ACK)!=0)
-    {
-        read(sd2,reponse,sltrlen(reponse));
-    }
+    strcpy(reponse,"null");
+    strcpy(reponse1,"null");
 
-    CHECK(write(sd2, commun, strlen(commun)+1), "Can't write");
-    read(sd2,reponse,sltrlen(reponse));
-    while(strcmp(reponse,ACK)!=0)
-    {
-        read(sd2,reponse,sltrlen(reponse));
-    }
     
     /*for(int i=1;i<nombreJoueur+1;i++)
     {
@@ -124,92 +101,10 @@ void mainPartie(int sd1, int sd2)
     }
 
 
-    CHECK(write(sd1, P2, strlen(P2)+1), "Can't write");
-    CHECK(write(sd2, P2, strlen(P2)+1), "Can't write");
-
-    sprintf(rep,"%d",reponse);
-    sprintf(rep1,"%d",reponse1);
-
-    CHECK(write(clt1, "joueur ", strlen("joueur ") + 1), "Can't send");
-    read(clt1,ack,sizeof(ack));
-    while(strcmp(ack,ACK)!=0) //attente d'ack (ACK) du client
-    {
-        read(clt1,ack,sizeof(ack));
-        sleep(1);
-    }
-
-    CHECK(write(clt1, rep1, strlen(rep1) + 1), "Can't send");
-    read(clt1,ack,sizeof(ack));
-    while(strcmp(ack,ACK)!=0)//attente d'ack (ACK) du client
-    {
-        read(clt1,ack,sizeof(ack));
-        sleep(1);
-    }
-    CHECK(write(clt1, ": ", strlen(": ") + 1), "Can't send");
-    read(clt1,ack,sizeof(ack));
-    while(strcmp(ack,ACK)!=0)//attente d'ack (ACK) du client
-    { 
-        read(clt1,ack,sizeof(ack));
-        sleep(1);
-    }
-
-    CHECK(write(clt1, rep, strlen(rep) + 1), "Can't send");
-    read(clt1,ack,sizeof(ack));
-    while(strcmp(ack,ACK)!=0)//attente d'ack (ACK) du client
-    { 
-        read(clt1,ack,sizeof(ack));
-        sleep(1);
-    }
-
-    CHECK(write(clt1, "\n", strlen("\n") + 1), "Can't send");
-    read(clt1,ack,sizeof(ack));
-    while(strcmp(ack,ACK)!=0)//attente d'ack (ACK) du client
-    { 
-        read(clt1,ack,sizeof(ack));
-        sleep(1);
-    }
-
-    CHECK(write(clt2, "joueur ", strlen("joueur ") + 1), "Can't send");
-    read(clt2,ack,sizeof(ack));
-    while(strcmp(ack,ACK)!=0)//attente d'ack (ACK) du client
-    { 
-        read(clt2,ack,sizeof(ack));
-        sleep(1);
-    }
-
-    CHECK(write(clt2, rep1, strlen(rep1) + 1), "Can't send");
-    read(clt2,ack,sizeof(ack));
-    while(strcmp(ack,ACK)!=0)//attente d'ack (ACK) du client
-    { 
-        read(clt2,ack,sizeof(ack));
-        sleep(1);
-    }
-    CHECK(write(clt2, ":\t", strlen("\n") + 1), "Can't send");
-    read(clt2,ack,sizeof(ack));
-    while(strcmp(ack,ACK)!=0)//attente d'ack (ACK) du client
-    { 
-        read(clt2,ack,sizeof(ack));
-        sleep(1);
-    }
-    CHECK(write(clt2, rep, strlen(rep) + 1), "Can't send");
-    read(clt2,ack,sizeof(ack));
-    while(strcmp(ack,ACK)!=0)//attente d'ack (ACK) du client
-    { 
-        read(clt2,ack,sizeof(ack));
-        sleep(1);
-    }
-    CHECK(write(clt2, "\n", strlen("\n") + 1), "Can't send");
-    read(clt2,ack,sizeof(ack));
-    while(strcmp(ack,ACK)!=0)//attente d'ack (ACK) du client
-    { 
-        read(clt2,ack,sizeof(ack));
-        sleep(1);
-    }
-
     gagnant();
 
-    CHECK(write(clt1, FIN, strlen(FIN) + 1), "Can't send");
-    CHECK(write(clt2, FIN, strlen(FIN) + 1), "Can't send");  
+    CHECK(write(sd1, FIN, strlen(FIN) + 1), "Can't send");
+    CHECK(write(sd2, FIN, strlen(FIN) + 1), "Can't send");  
 }
 
 /* ------------------------------------------------------------------------ */
@@ -236,7 +131,7 @@ void affichageDistribution() //affiche le tableau distribution
  *  \param       joueur  : Nombre representant le numéro du joueur
  */
 /* ------------------------------------------------------------------------ */
-void affichageFenetre(int joueur,int distribution[6][3],int tapis[5][2]) //Creer l'affichage cote joueur
+void affichageFenetre(int joueur) //Creer l'affichage cote joueur
 {
     printf("\nJoueur %d\n\n\n",joueur);
 
@@ -403,7 +298,7 @@ char *cartesCouleur(int couleur)//transforme un int en char
  * \param       joueur  : Nombre representant le numéro du joueur
  */
 /* ------------------------------------------------------------------------ */
-void changerCartes(int joueur,int distribution[6][3],int tapis[5][2]) //chaque joueur a la possibilite de changer ses cartes au premier tour
+void changerCartes(int joueur) //chaque joueur a la possibilite de changer ses cartes au premier tour
 {
     int numero=-1,couleur=-1,nombre=-1,ligne=-1,fini=0;
     char cCouleur[10];

@@ -46,6 +46,7 @@
 #define P2 "20"
 #define P3 "30"
 #define ACK "ack" 
+#define ACK2 "ack2"
 #define FIN "fin de partie"
 #define DEM "dem"
  
@@ -71,13 +72,13 @@ void creationListeCartes();
 void distribuer2Cartes();
 int emplacementCarte(int tab[6][3],int *, int, int, int);
 void gagnant();
-void changerCartes(int,int[6][3],int[5][2]);
+void changerCartes(int);
 int couleurCartes(char *);
 char *cartesCouleur(int);
 void affichageDistribution();
 void affichageTapis();
 void distribuerTapis(int);
-void affichageFenetre(int,int[6][3],int[5][2]);
+void affichageFenetre(int);
 void creationNbPoints(int joueur);
 void demanderMainFinale(int);
 int existeTapis(int, int, int, int, int);
